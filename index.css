@@ -462,6 +462,105 @@ main {
 .tag.brown { background-color: var(--brown); }
 .tag.red { background-color: var(--red); }
 
+/* Training Programs */
+.program-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.program-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 25px;
+    border-left: 6px solid;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.program-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.program-card h3 {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.program-card h4 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--accent-color);
+    margin-bottom: 15px;
+}
+
+.program-card p {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.program-details h5 {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.program-details ul {
+    list-style-type: '✔';
+    padding-left: 20px;
+    color: var(--accent-color);
+}
+
+.program-details ul li {
+    padding-left: 10px;
+    margin-bottom: 8px;
+}
+
+.program-schedule {
+    font-size: 0.9rem;
+    background-color: var(--bg-light);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    color: var(--accent-color);
+}
+
+.program-schedule div {
+    margin-bottom: 8px;
+}
+
+.program-schedule div:last-child {
+    margin-bottom: 0;
+}
+
+.program-schedule strong {
+    color: var(--primary-color);
+}
+
+.program-button {
+    margin-top: 25px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+    align-self: center;
+}
+
+.program-button:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 /* Virtual Dojo */
 .virtual-dojo-intro {
     background-color: var(--white);

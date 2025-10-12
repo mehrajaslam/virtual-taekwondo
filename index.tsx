@@ -146,6 +146,48 @@ const techniquesData = [
     }
 ];
 
+const trainingProgramsData = [
+    {
+        level: 'Beginner',
+        title: 'The Foundation (White to Green Belt)',
+        description: 'This program is designed for new students to build a strong base in Taekwondo. The focus is on mastering fundamental stances, basic kicks, and understanding the core principles of discipline and respect.',
+        focus: ['Basic Stances (Ap Seogi, Ap Kubi)', 'Fundamental Kicks (Ap Chagi, Dollyo Chagi)', 'Essential Blocks (Arae Makgi, Momtong An Makgi)', 'Forms: Taegeuk Il Jang & Ee Jang'],
+        schedule: [
+            { day: 'Day 1 & 4', activity: 'Stance and Footwork Drills (30 mins), Basic Kicks Practice (30 mins)' },
+            { day: 'Day 2 & 5', activity: 'Poomsae (Form) Practice (45 mins), Basic Blocks (15 mins)' },
+            { day: 'Day 3 & 6', activity: 'Flexibility and Conditioning (30 mins), Review and Repetition (30 mins)' },
+            { day: 'Day 7', activity: 'Rest or light activity like stretching' }
+        ],
+        style: 'var(--green)'
+    },
+    {
+        level: 'Intermediate',
+        title: 'The Path of Growth (Green to Blue Belt)',
+        description: 'For students who have grasped the basics, this program introduces more complex techniques, combinations, and the fundamentals of sparring. The goal is to enhance coordination, power, and strategic thinking.',
+        focus: ['Advanced Stances (Dwit Kubi)', 'Combination Kicking', 'Introductory Sparring Drills', 'Forms: Taegeuk Sam Jang & Sa Jang'],
+        schedule: [
+            { day: 'Day 1 & 4', activity: 'Combination Kicking Drills (40 mins), Footwork for Sparring (20 mins)' },
+            { day: 'Day 2 & 5', activity: 'Poomsae (Form) Practice (30 mins), One-Step Sparring (30 mins)' },
+            { day: 'Day 3 & 6', activity: 'Strength and Conditioning (45 mins), Advanced Blocks (15 mins)' },
+            { day: 'Day 7', activity: 'Rest or light sparring' }
+        ],
+        style: 'var(--blue)'
+    },
+    {
+        level: 'Advanced',
+        title: 'The Edge of Mastery (Blue to Red/Black Belt)',
+        description: 'This program is for dedicated practitioners aiming for precision, speed, and power. It focuses on advanced techniques, free sparring, and a deeper philosophical understanding of Taekwondo as a martial art.',
+        focus: ['Spinning and Jumping Kicks', 'Advanced Sparring Strategies', 'Board Breaking Techniques', 'Forms: Taegeuk Oh Jang and higher'],
+        schedule: [
+            { day: 'Day 1 & 4', activity: 'Advanced Kicking Techniques (Jumping/Spinning) (45 mins), Reaction Drills (15 mins)' },
+            { day: 'Day 2 & 5', activity: 'Poomsae (Form) Mastery (30 mins), Free Sparring Sessions (30 mins)' },
+            { day: 'Day 3 & 6', activity: 'Power and Agility Training (30 mins), Self-Defense Scenarios (30 mins)' },
+            { day: 'Day 7', activity: 'Rest and mental training (visualization, meditation)' }
+        ],
+        style: 'var(--red)'
+    }
+];
+
 const timerPresets = {
     stance: { label: 'Stance Hold (1 min)', duration: 60 },
     form: { label: 'Form Practice (5 min)', duration: 300 },
@@ -458,6 +500,7 @@ const App = () => {
                     <nav className="tab-nav">
                         <button className={`tab-button ${activeTab === 'journey' ? 'active' : ''}`} onClick={() => setActiveTab('journey')}>The Journey</button>
                         <button className={`tab-button ${activeTab === 'techniques' ? 'active' : ''}`} onClick={() => setActiveTab('techniques')}>Techniques</button>
+                        <button className={`tab-button ${activeTab === 'programs' ? 'active' : ''}`} onClick={() => setActiveTab('programs')}>Training Programs</button>
                         <button className={`tab-button ${activeTab === 'dojo' ? 'active' : ''}`} onClick={() => setActiveTab('dojo')}>Virtual Dojo</button>
                         <button className={`tab-button ${activeTab === 'timer' ? 'active' : ''}`} onClick={() => setActiveTab('timer')}>Practice Timer</button>
                     </nav>
@@ -552,6 +595,43 @@ const App = () => {
                                             </div>
                                         </div>
                                     ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {activeTab === 'programs' && (
+                            <section className="section">
+                                <h2 className="section-title">Structured Training Programs</h2>
+                                <p className="section-subtitle">Follow a guided path to enhance your skills, from foundational techniques to advanced mastery.</p>
+                                <div className="program-grid">
+                                    {trainingProgramsData.map((program) => {
+                                        const prompt = `Create a detailed 4-week training plan for a Taekwondo ${program.level}. The program title is "${program.title}". The goal is: "${program.description}". Key focus areas are: ${program.focus.join(', ')}. Use this sample schedule as a guide: ${program.schedule.map(s => `${s.day}: ${s.activity}`).join('; ')}. Break down the plan day-by-day with specific drills, rep counts, and goals for each week.`;
+                                        return (
+                                            <div key={program.level} className="program-card" style={{ borderLeftColor: program.style }}>
+                                                <h3>{program.level} Program</h3>
+                                                <h4>{program.title}</h4>
+                                                <p>{program.description}</p>
+                                                
+                                                <div className="program-details">
+                                                    <h5>Key Focus Areas:</h5>
+                                                    <ul>
+                                                        {program.focus.map((item, i) => <li key={i}>{item}</li>)}
+                                                    </ul>
+
+                                                    <h5>Sample Weekly Schedule:</h5>
+                                                    <div className="program-schedule">
+                                                        {program.schedule.map((item, i) => (
+                                                            <div key={i}><strong>{item.day}:</strong> {item.activity}</div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                
+                                                <button className="program-button" onClick={() => handleContextualSubmit(prompt)}>
+                                                    Generate Detailed Plan with AI
+                                                </button>
+                                            </div>
+                                        )
+                                    })}
                                 </div>
                             </section>
                         )}
