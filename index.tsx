@@ -5,14 +5,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI } from "@google/genai";
 
-// Per coding guidelines, API key is sourced from `process.env.API_KEY`.
-// It's assumed to be pre-configured and accessible in the execution environment.
-const apiKey = process.env.API_KEY;
-
-// Per coding guidelines, initialize GoogleGenAI with a named apiKey parameter.
-// If the API key is not available, we initialize with an empty string
-// and handle the error gracefully in the UI.
-const ai = new GoogleGenAI({ apiKey: apiKey || '' });
+// Fix: Initialize GoogleGenAI with API key from environment variables as per guidelines.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const beltProgression = [
     {
@@ -258,12 +252,12 @@ const App = () => {
     const [timerPreset, setTimerPreset] = useState(Object.keys(timerPresets)[0]);
     const [timeRemaining, setTimeRemaining] = useState(timerPresets[timerPreset].duration);
     const [isTimerActive, setIsTimerActive] = useState(false);
-    const timerIntervalRef = useRef<number | null>(null);
+    // Fix: Use ReturnType<typeof setInterval> to correctly type the ref for browser and Node.js environments.
+    const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     
     // Video Player Ref
     const videoRef = useRef<HTMLVideoElement>(null);
-
 
     useEffect(() => {
         if (bgUrl) {
@@ -344,7 +338,6 @@ const App = () => {
         };
     }, [activeModalTechnique]);
 
-
     const handleApplyCustomization = () => {
         setBgUrl(tempBgUrl);
         setIsCustomizerOpen(false);
@@ -376,12 +369,7 @@ const App = () => {
         return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     };
 
-
     const generateAnswer = async (currentPrompt) => {
-        if (!apiKey) {
-            setError('API_KEY is not configured. Please set up your environment variables.');
-            return;
-        }
         if (!currentPrompt) {
             setError('Please enter a prompt.');
             return;
@@ -411,11 +399,6 @@ const App = () => {
     };
 
     const handleGenerateVideo = async (techniqueName: string) => {
-        if (!apiKey) {
-            setError('API_KEY is not configured.');
-            return;
-        }
-
         setVideoStates(prev => ({ ...prev, [techniqueName]: { isLoading: true } }));
 
         try {
@@ -438,7 +421,8 @@ const App = () => {
                 throw new Error("Video generation succeeded but no download link was provided.");
             }
 
-            const videoResponse = await fetch(`${downloadLink}&key=${apiKey}`);
+            // Fix: Use process.env.API_KEY for fetching video as per guidelines.
+            const videoResponse = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
             if (!videoResponse.ok) {
                 throw new Error(`Failed to download video: ${videoResponse.statusText}`);
             }
@@ -772,9 +756,11 @@ const App = () => {
             </main>
             <footer className="app-footer">
                 <p>&copy; 2024 Taekwondo AI Assistant. All rights reserved.</p>
-                <button className="settings-button" onClick={() => setIsCustomizerOpen(true)} aria-label="Customize theme">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.82 10.93a1 1 0 0 0-1.64-.78l-.13.22a8.03 8.03 0 0 0-1.4-1.4l.22-.13a1 1 0 0 0-.78-1.64L14.2 4.18a1 1 0 0 0-1.2 0l-.5.86a8.03 8.03 0 0 0-1.99 0l-.5-.86a1 1 0 0 0-1.2 0l-1.88 3.02a1 1 0 0 0-.79 1.64l.22.13a8.03 8.03 0 0 0-1.4 1.4l-.13-.22a1 1 0 0 0-1.64.78l-3.02 1.88a1 1 0 0 0 0 1.2l3.02 1.88a1 1 0 0 0 1.64-.78l.13-.22a8.03 8.03 0 0 0 1.4 1.4l-.22.13a1 1 0 0 0 .78 1.64l1.88 3.02a1 1 0 0 0 1.2 0l.5-.86a8.03 8.03 0 0 0 1.99 0l.5.86a1 1 0 0 0 1.2 0l1.88-3.02a1 1 0 0 0 .78-1.64l-.22-.13a8.03 8.03 0 0 0 1.4-1.4l.13.22a1 1 0 0 0 1.64-.78l-3.02-1.88Zm-7.82 5.57a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"></path></svg>
-                </button>
+                <div className="footer-buttons">
+                    <button className="settings-button" onClick={() => setIsCustomizerOpen(true)} aria-label="Customize theme">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.82 10.93a1 1 0 0 0-1.64-.78l-.13.22a8.03 8.03 0 0 0-1.4-1.4l.22-.13a1 1 0 0 0-.78-1.64L14.2 4.18a1 1 0 0 0-1.2 0l-.5.86a8.03 8.03 0 0 0-1.99 0l-.5-.86a1 1 0 0 0-1.2 0l-1.88 3.02a1 1 0 0 0-.79 1.64l.22.13a8.03 8.03 0 0 0-1.4 1.4l-.13-.22a1 1 0 0 0-1.64.78l-3.02 1.88a1 1 0 0 0 0 1.2l3.02 1.88a1 1 0 0 0 1.64-.78l.13-.22a8.03 8.03 0 0 0 1.4 1.4l-.22.13a1 1 0 0 0 .78 1.64l1.88 3.02a1 1 0 0 0 1.2 0l.5-.86a8.03 8.03 0 0 0 1.99 0l.5.86a1 1 0 0 0 1.2 0l1.88-3.02a1 1 0 0 0 .78-1.64l-.22-.13a8.03 8.03 0 0 0 1.4-1.4l.13.22a1 1 0 0 0 1.64-.78l-3.02-1.88Zm-7.82 5.57a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"></path></svg>
+                    </button>
+                </div>
             </footer>
 
             {activeModalTechnique && (

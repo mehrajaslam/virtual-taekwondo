@@ -1038,11 +1038,16 @@ main {
   position: relative;
 }
 
-/* Theme Customizer */
+.footer-buttons {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Theme Customizer & API Key Settings */
 .settings-button {
-  position: absolute;
-  bottom: 15px;
-  right: 20px;
   background: var(--accent-color);
   border: none;
   border-radius: 50%;
@@ -1093,7 +1098,14 @@ main {
 .customizer-modal h3 {
   font-size: 1.8rem;
   color: var(--primary-color);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.customizer-modal .modal-description {
+    font-size: 0.95rem;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 .customizer-modal .form-group {
@@ -1116,6 +1128,17 @@ main {
   font-size: 1rem;
 }
 
+.customizer-modal .get-key-link {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--blue);
+    text-decoration: none;
+}
+.customizer-modal .get-key-link:hover {
+    text-decoration: underline;
+}
+
 .customizer-actions {
   display: flex;
   justify-content: flex-end;
@@ -1136,6 +1159,7 @@ main {
 .customizer-actions .apply-button {
   background-color: var(--primary-color);
   color: var(--white);
+  width: 100%;
 }
 
 .customizer-actions .apply-button:hover {
