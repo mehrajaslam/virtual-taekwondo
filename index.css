@@ -172,6 +172,14 @@ main {
   margin-bottom: 40px;
 }
 
+/* General button disabled state */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  background-color: var(--accent-color) !important;
+}
+
+
 /* Belt Progression System */
 .belt-grid {
   display: grid;
@@ -232,9 +240,15 @@ main {
   margin-top: auto;
 }
 
-.context-button:hover {
+.context-button:hover:not(:disabled) {
   background-color: var(--accent-color);
   color: var(--white);
+}
+
+.context-button:disabled {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background-color: transparent !important;
 }
 
 
@@ -357,8 +371,13 @@ main {
   flex-grow: 1;
 }
 
-.technique-item .ask-ai-button:hover {
+.technique-item .ask-ai-button:hover:not(:disabled) {
   color: var(--blue);
+}
+
+.technique-item .ask-ai-button:disabled {
+    opacity: 0.6;
+    background: none !important;
 }
 
 .technique-item .play-icon {
@@ -374,6 +393,36 @@ main {
 .technique-info strong {
   display: block;
   font-weight: 600;
+}
+
+.technique-buttons-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.youtube-button {
+    background-color: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+.youtube-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.youtube-button:hover:not(:disabled) {
+    opacity: 0.8;
 }
 
 .video-button {
@@ -398,11 +447,31 @@ main {
     opacity: 0.8;
 }
 
-.video-button:disabled {
-    background-color: var(--accent-color);
-    cursor: not-allowed;
-    opacity: 0.7;
+.youtube-embed-wrapper {
+    list-style: none;
+    padding: 10px 0;
+    animation: fadeIn 0.4s ease-in-out;
 }
+
+.youtube-video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.youtube-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 
 .poomsae-details {
   flex-grow: 1;
@@ -556,8 +625,8 @@ main {
     align-self: center;
 }
 
-.program-button:hover {
-    background-color: var(--accent-color);
+.program-button:hover:not(:disabled) {
+    background-color: var(--accent-color) !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -635,7 +704,7 @@ main {
     transition: var(--transition);
 }
 
-.dojo-button:hover {
+.dojo-button:hover:not(:disabled) {
     opacity: 0.85;
     box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
@@ -776,6 +845,10 @@ main {
   font-size: 1rem;
 }
 
+.prompt-textarea:disabled {
+    background-color: #f0f0f0;
+}
+
 .submit-button {
   padding: 12px 25px;
   border: none;
@@ -788,9 +861,8 @@ main {
   transition: background-color 0.3s, opacity 0.3s;
 }
 
-.submit-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.submit-button:hover:not(:disabled) {
+    background: var(--accent-color) !important;
 }
 
 .error-message {
@@ -850,11 +922,18 @@ main {
 .ai-response-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 12px 20px;
   background-color: var(--bg-light);
   border-bottom: 1px solid #ddd;
   color: var(--primary-color);
+}
+
+.header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .ai-response-header h3 {
@@ -866,6 +945,51 @@ main {
 .ai-response-icon {
   color: var(--blue);
 }
+
+.ai-response-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.share-button {
+    background: transparent;
+    border: 1px solid #ccc;
+    color: var(--accent-color);
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.share-button:hover:not(:disabled) {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.share-button:disabled:not(.copied) {
+    background-color: transparent !important;
+}
+
+.share-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.share-button.copied {
+    background-color: var(--green) !important;
+    color: var(--white);
+    border-color: var(--green);
+    cursor: default !important;
+}
+.share-button.copied:hover {
+    opacity: 0.9;
+}
+
 
 .ai-response-body {
   white-space: pre-wrap;
@@ -966,10 +1090,28 @@ main {
 .modal-status-indicator p {
     color: var(--text-light);
     opacity: 0.8;
+    margin-bottom: 20px;
 }
 
 .modal-status-indicator.error h3 {
     color: var(--red);
+}
+
+.modal-action-button {
+    display: inline-block;
+    background-color: var(--blue);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    border: none;
+}
+
+.modal-action-button:hover {
+    opacity: 0.85;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
 
 .loading-spinner {

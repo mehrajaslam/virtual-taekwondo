@@ -1,12 +1,6 @@
-// Fix: Replaced the entire file content which was causing parsing errors.
-// The new content is a complete, functional React component that demonstrates
-// the correct usage of the Gemini API as per the coding guidelines.
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI } from "@google/genai";
-
-// Fix: Initialize GoogleGenAI with API key from environment variables as per guidelines.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const beltProgression = [
     {
@@ -69,10 +63,10 @@ const techniquesData = [
             {
                 title: 'Basic Stances (Seogi)',
                 techniques: [
-                    { name: 'Ready Stance (Joonbi Seogi)', belt: 'white' },
-                    { name: 'Walking Stance (Ap Seogi)', belt: 'white' },
-                    { name: 'Front Stance (Ap Kubi)', belt: 'yellow' },
-                    { name: 'Back Stance (Dwit Kubi)', belt: 'green' },
+                    { name: 'Ready Stance (Joonbi Seogi)', belt: 'white', youtubeId: 'luaRUqNIfQE' },
+                    { name: 'Walking Stance (Ap Seogi)', belt: 'white', youtubeId: 'PfrfkKA51Q0' },
+                    { name: 'Front Stance (Ap Kubi)', belt: 'yellow', youtubeId: 'PuWO6aoAFbU' },
+                    { name: 'Back Stance (Dwit Kubi)', belt: 'green', youtubeId: 'cAe5ACVkorY' },
                 ],
             },
             {
@@ -189,7 +183,6 @@ const timerPresets = {
     custom: { label: 'Quick Spar (30 sec)', duration: 30 },
 };
 
-
 const getVideoPromptForTechnique = (techniqueName: string): string => {
     const basePrompt = `A high-definition, 1080p, 30fps video of a Taekwondo practitioner in a traditional white dobok, set in a clean, minimalist dojo with wooden floors. The video must clearly demonstrate the technique with precision and control.`;
     const virtualDojoPrompt = `A high-definition, 1080p, 30fps video. A Taekwondo practitioner in a sleek, modern dobok is in a futuristic, minimalist dojo with neon blue accents.`;
@@ -230,16 +223,23 @@ const getVideoPromptForTechnique = (techniqueName: string): string => {
     return techniquePrompts[techniqueName] || `${basePrompt} Demonstrate the ${techniqueName}. The video should use a side-view perspective and include a slow-motion replay to ensure clarity of the movement and perfect form.`;
 };
 
+type VideoError = { message: string; type: 'quota' | 'generic' };
+
+// Initialize Gemini AI client. Assumes API_KEY is set in the environment.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const App = () => {
+    // AI State
     const [prompt, setPrompt] = useState('Explain the history of Taekwondo.');
     const [response, setResponse] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [openAccordion, setOpenAccordion] = useState('foundations');
-    const [videoStates, setVideoStates] = useState<Record<string, { url?: string; isLoading: boolean; error?: string }>>({});
+    const [videoStates, setVideoStates] = useState<Record<string, { url?: string; isLoading: boolean; error?: VideoError }>>({});
     const [activeModalTechnique, setActiveModalTechnique] = useState<string | null>(null);
+    const [copySuccess, setCopySuccess] = useState(false);
 
+    // Theme Customizer State
     const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
     const defaultBgUrl = 'https://images.unsplash.com/photo-1620152288427-4860b7692138?q=80&w=2574&auto=format&fit=crop';
     const [bgUrl, setBgUrl] = useState(localStorage.getItem('tkd-bg-url') || defaultBgUrl);
@@ -247,12 +247,13 @@ const App = () => {
     
     // UI State
     const [activeTab, setActiveTab] = useState('journey');
+    const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
 
     // Timer State
     const [timerPreset, setTimerPreset] = useState(Object.keys(timerPresets)[0]);
     const [timeRemaining, setTimeRemaining] = useState(timerPresets[timerPreset].duration);
     const [isTimerActive, setIsTimerActive] = useState(false);
-    // Fix: Use ReturnType<typeof setInterval> to correctly type the ref for browser and Node.js environments.
     const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     
@@ -343,7 +344,7 @@ const App = () => {
         setIsCustomizerOpen(false);
     };
 
-    const handleAccordionToggle = (id) => {
+    const handleAccordionToggle = (id: string) => {
         setOpenAccordion(openAccordion === id ? null : id);
     };
     
@@ -388,11 +389,30 @@ const App = () => {
             setResponse(result.text);
         } catch (e) {
             console.error(e);
+            let errorMessageText = 'An unknown error occurred while generating content.';
             if (e instanceof Error) {
-                setError(`Failed to generate content: ${e.message}`);
-            } else {
-                setError('An unknown error occurred while generating content.');
+                const errorMessage = e.message.toLowerCase();
+                if (errorMessage.includes('quota') || errorMessage.includes('resource_exhausted')) {
+                    errorMessageText = "You've reached the API usage limit for generating answers. Please check your Google AI Studio account for more details or to set up billing.";
+                } else {
+                     try {
+                        const jsonMatch = e.message.match(/{.*}/);
+                        if (jsonMatch) {
+                            const errorJson = JSON.parse(jsonMatch[0]);
+                            if (errorJson.error?.message) {
+                                errorMessageText = `Failed to generate content: ${errorJson.error.message}`;
+                            } else {
+                                errorMessageText = `Failed to generate content: ${e.message}`;
+                            }
+                        } else {
+                            errorMessageText = `Failed to generate content: ${e.message}`;
+                        }
+                    } catch (parseError) {
+                        errorMessageText = `Failed to generate content: ${e.message}`;
+                    }
+                }
             }
+            setError(errorMessageText);
         } finally {
             setLoading(false);
         }
@@ -421,7 +441,6 @@ const App = () => {
                 throw new Error("Video generation succeeded but no download link was provided.");
             }
 
-            // Fix: Use process.env.API_KEY for fetching video as per guidelines.
             const videoResponse = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
             if (!videoResponse.ok) {
                 throw new Error(`Failed to download video: ${videoResponse.statusText}`);
@@ -433,8 +452,39 @@ const App = () => {
 
         } catch (e) {
             console.error(e);
-            const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-            setVideoStates(prev => ({ ...prev, [techniqueName]: { isLoading: false, error: `Failed to generate video: ${errorMessage}` } }));
+            let errorPayload: VideoError = { 
+                message: 'An unknown error occurred while generating the video.', 
+                type: 'generic' 
+            };
+
+            if (e instanceof Error) {
+                const errorMessage = e.message.toLowerCase();
+                // Check for specific quota/exhausted keywords
+                if (errorMessage.includes('quota') || errorMessage.includes('resource_exhausted')) {
+                    errorPayload = {
+                        message: "You've reached the API usage limit for video generation. To continue, please check your Google AI Studio account for more details or set up billing.",
+                        type: 'quota'
+                    };
+                } else {
+                    // Try to parse a more specific error message if it's in the response
+                    try {
+                        const jsonMatch = e.message.match(/{.*}/);
+                        if (jsonMatch) {
+                            const errorJson = JSON.parse(jsonMatch[0]);
+                            if (errorJson.error?.message) {
+                                errorPayload.message = errorJson.error.message;
+                            } else {
+                                errorPayload.message = e.message;
+                            }
+                        } else {
+                            errorPayload.message = e.message;
+                        }
+                    } catch (parseError) {
+                        errorPayload.message = e.message;
+                    }
+                }
+            }
+            setVideoStates(prev => ({ ...prev, [techniqueName]: { isLoading: false, error: errorPayload } }));
         }
     };
 
@@ -467,6 +517,30 @@ const App = () => {
     const handleContextualSubmit = (contextualPrompt) => {
         setPrompt(contextualPrompt);
         generateAnswer(contextualPrompt);
+    };
+
+    const handleCopyToClipboard = () => {
+        if (!response) return;
+        navigator.clipboard.writeText(response).then(() => {
+            setCopySuccess(true);
+            setTimeout(() => setCopySuccess(false), 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    };
+    
+    const handleShare = async () => {
+        if (!response) return;
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Taekwondo AI Assistant Response',
+                    text: response,
+                });
+            } catch (error) {
+                console.error('Error sharing:', error);
+            }
+        }
     };
 
     return (
@@ -537,20 +611,43 @@ const App = () => {
                                                                     <ul className="technique-list">
                                                                         {card.techniques.map((tech, techIndex) => {
                                                                             const contextualPrompt = `How do I perform a ${tech.name}? Provide step-by-step instructions and common mistakes to avoid.`;
+                                                                            const isVideoOpen = activeVideo === tech.name;
                                                                             
                                                                             return (
-                                                                                <li key={techIndex} className="technique-item">
-                                                                                    <button className="ask-ai-button" onClick={() => handleContextualSubmit(contextualPrompt)}>
-                                                                                        <span className="play-icon">?</span>
-                                                                                        <div className="technique-info">
-                                                                                            <strong>{tech.name}</strong>
+                                                                                <React.Fragment key={techIndex}>
+                                                                                    <li className="technique-item">
+                                                                                        <button className="ask-ai-button" onClick={() => handleContextualSubmit(contextualPrompt)}>
+                                                                                            <span className="play-icon">?</span>
+                                                                                            <div className="technique-info">
+                                                                                                <strong>{tech.name}</strong>
+                                                                                            </div>
+                                                                                            {tech.belt !== 'white' && <span className={`tag ${tech.belt.toLowerCase()}`}>{tech.belt}</span>}
+                                                                                        </button>
+                                                                                        <div className="technique-buttons-group">
+                                                                                            {tech.youtubeId && (
+                                                                                                <button className="youtube-button" onClick={() => setActiveVideo(isVideoOpen ? null : tech.name)} title="Watch YouTube Tutorial">
+                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm6.44,11.33-6,3.33a.62.62,0,0,1-.94-.53V8.89a.62.62,0,0,1,.94-.53l6,3.33A.62.62,0,0,1,18.44,12.23Z"/></svg>
+                                                                                                </button>
+                                                                                            )}
+                                                                                            <button className="video-button" onClick={() => openVideoModal(tech.name)} disabled={videoStates[tech.name]?.isLoading} title="Generate AI Video">
+                                                                                                {videoStates[tech.name]?.isLoading ? '...' : '▶'}
+                                                                                            </button>
                                                                                         </div>
-                                                                                        {tech.belt !== 'white' && <span className={`tag ${tech.belt.toLowerCase()}`}>{tech.belt}</span>}
-                                                                                    </button>
-                                                                                    <button className="video-button" onClick={() => openVideoModal(tech.name)} disabled={videoStates[tech.name]?.isLoading}>
-                                                                                        {videoStates[tech.name]?.isLoading ? '...' : '▶'}
-                                                                                    </button>
-                                                                                </li>
+                                                                                    </li>
+                                                                                    {isVideoOpen && tech.youtubeId && (
+                                                                                         <li className="youtube-embed-wrapper">
+                                                                                            <div className="youtube-video-container">
+                                                                                                <iframe
+                                                                                                    src={`https://www.youtube.com/embed/${tech.youtubeId}?autoplay=1`}
+                                                                                                    title={tech.name}
+                                                                                                    frameBorder="0"
+                                                                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                                    allowFullScreen>
+                                                                                                </iframe>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    )}
+                                                                                </React.Fragment>
                                                                             );
                                                                         })}
                                                                     </ul>
@@ -720,7 +817,7 @@ const App = () => {
                             />
                             <button 
                                 onClick={handleSubmit} 
-                                disabled={loading || !prompt} 
+                                disabled={loading || !prompt}
                                 className="submit-button"
                             >
                                 {loading ? 'Generating...' : 'Get Answer'}
@@ -740,10 +837,28 @@ const App = () => {
                             {response && !loading && (
                                 <div className="ai-response-container">
                                     <div className="ai-response-header">
-                                        <svg className="ai-response-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                                            <path d="M12 2.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V3.25a.75.75 0 0 1 .75-.75ZM18.06 5.94a.75.75 0 0 1 0 1.06l-2.475 2.475a.75.75 0 0 1-1.06-1.06L17 5.94a.75.75 0 0 1 1.06 0ZM20.75 12a.75.75 0 0 1-.75.75h-3.5a.75.75 0 0 1 0-1.5h3.5a.75.75 0 0 1 .75.75ZM18.06 18.06a.75.75 0 0 1-1.06 0l-2.475-2.475a.75.75 0 0 1 1.06-1.06L17 17a.75.75 0 0 1 0 1.06ZM12 20.75a.75.75 0 0 1-.75.75v-3.5a.75.75 0 0 1 1.5 0v3.5a.75.75 0 0 1-.75-.75ZM5.94 18.06a.75.75 0 0 1 0-1.06l2.475-2.475a.75.75 0 0 1 1.06 1.06L7 18.06a.75.75 0 0 1-1.06 0ZM3.25 12a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75ZM5.94 5.94a.75.75 0 0 1 1.06 0l2.475 2.475a.75.75 0 0 1-1.06 1.06L7 7a.75.75 0 0 1 0-1.06Z" />
-                                        </svg>
-                                        <h3>AI Generated Answer</h3>
+                                        <div className="header-title-group">
+                                            <svg className="ai-response-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                                                <path d="M12 2.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V3.25a.75.75 0 0 1 .75-.75ZM18.06 5.94a.75.75 0 0 1 0 1.06l-2.475 2.475a.75.75 0 0 1-1.06-1.06L17 5.94a.75.75 0 0 1 1.06 0ZM20.75 12a.75.75 0 0 1-.75.75h-3.5a.75.75 0 0 1 0-1.5h3.5a.75.75 0 0 1 .75.75ZM18.06 18.06a.75.75 0 0 1-1.06 0l-2.475-2.475a.75.75 0 0 1 1.06-1.06L17 17a.75.75 0 0 1 0 1.06ZM12 20.75a.75.75 0 0 1-.75.75v-3.5a.75.75 0 0 1 1.5 0v3.5a.75.75 0 0 1-.75-.75ZM5.94 18.06a.75.75 0 0 1 0-1.06l2.475-2.475a.75.75 0 0 1 1.06 1.06L7 18.06a.75.75 0 0 1-1.06 0ZM3.25 12a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75ZM5.94 5.94a.75.75 0 0 1 1.06 0l2.475 2.475a.75.75 0 0 1-1.06 1.06L7 7a.75.75 0 0 1 0-1.06Z" />
+                                            </svg>
+                                            <h3>AI Generated Answer</h3>
+                                        </div>
+                                         <div className="ai-response-actions">
+                                            <button onClick={handleCopyToClipboard} className={`share-button ${copySuccess ? 'copied' : ''}`} title="Copy to clipboard" disabled={copySuccess}>
+                                                {copySuccess ? (
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                                                ) : (
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                                                )}
+                                                <span>{copySuccess ? 'Copied!' : 'Copy'}</span>
+                                            </button>
+                                            {navigator.share && (
+                                                <button onClick={handleShare} className="share-button" title="Share response">
+                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 8.81C7.5 8.31 6.79 8 6 8c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                                                    <span>Share</span>
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                     <pre className="ai-response-body">
                                         {response}
@@ -757,7 +872,7 @@ const App = () => {
             <footer className="app-footer">
                 <p>&copy; 2024 Taekwondo AI Assistant. All rights reserved.</p>
                 <div className="footer-buttons">
-                    <button className="settings-button" onClick={() => setIsCustomizerOpen(true)} aria-label="Customize theme">
+                     <button className="settings-button" onClick={() => setIsCustomizerOpen(true)} aria-label="Customize theme">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.82 10.93a1 1 0 0 0-1.64-.78l-.13.22a8.03 8.03 0 0 0-1.4-1.4l.22-.13a1 1 0 0 0-.78-1.64L14.2 4.18a1 1 0 0 0-1.2 0l-.5.86a8.03 8.03 0 0 0-1.99 0l-.5-.86a1 1 0 0 0-1.2 0l-1.88 3.02a1 1 0 0 0-.79 1.64l.22.13a8.03 8.03 0 0 0-1.4 1.4l-.13-.22a1 1 0 0 0-1.64.78l-3.02 1.88a1 1 0 0 0 0 1.2l3.02 1.88a1 1 0 0 0 1.64-.78l.13-.22a8.03 8.03 0 0 0 1.4 1.4l-.22.13a1 1 0 0 0 .78 1.64l1.88 3.02a1 1 0 0 0 1.2 0l.5-.86a8.03 8.03 0 0 0 1.99 0l.5.86a1 1 0 0 0 1.2 0l1.88-3.02a1 1 0 0 0 .78-1.64l-.22-.13a8.03 8.03 0 0 0 1.4-1.4l.13.22a1 1 0 0 0 1.64-.78l-3.02-1.88Zm-7.82 5.57a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"></path></svg>
                     </button>
                 </div>
@@ -789,8 +904,18 @@ const App = () => {
                             )}
                             {videoStates[activeModalTechnique]?.error && (
                                 <div className="modal-status-indicator error">
-                                    <h3>Video Generation Failed</h3>
-                                    <p>{videoStates[activeModalTechnique].error}</p>
+                                    <h3>{videoStates[activeModalTechnique].error.type === 'quota' ? 'API Quota Exceeded' : 'Video Generation Failed'}</h3>
+                                    <p>{videoStates[activeModalTechnique].error.message}</p>
+                                    {videoStates[activeModalTechnique].error.type === 'quota' && (
+                                        <a 
+                                            href="https://aistudio.google.com/app/apikey" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="modal-action-button"
+                                        >
+                                            Check Billing Status
+                                        </a>
+                                    )}
                                 </div>
                             )}
                         </div>
