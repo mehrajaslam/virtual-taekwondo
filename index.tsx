@@ -134,6 +134,48 @@ const techniquesData = [
     }
 ];
 
+const sparringDrillsData = [
+    {
+        title: 'One-Step Sparring (Hanbon Kyorugi)',
+        description: 'A foundational partner drill that bridges the gap between static basic techniques and dynamic free sparring. One person executes a pre-arranged attack, and the other responds with a pre-arranged block and counter-attack. Variations include two-step or three-step sparring for more complex scenarios. This drill is crucial for developing the muscle memory needed to react instinctively and effectively under pressure.',
+        keyFocusAreas: ['Timing & Reaction', 'Distance Control', 'Precision & Accuracy', 'Defensive Application'],
+        equipment: ['Partner', 'Optional: Hogu (chest protector), headgear'],
+        safetyTips: [
+            'Start slowly to master the sequence before increasing speed.',
+            'Maintain clear communication with your partner.',
+            'Focus on control; techniques should be stopped just short of making contact.',
+            'Always bow to your partner before and after the drill as a sign of respect.'
+        ],
+        style: 'var(--yellow)'
+    },
+    {
+        title: 'Free Sparring (Jayu Kyorugi)',
+        description: 'Unrehearsed, continuous sparring simulating a competition match, where practitioners must apply their techniques fluidly and strategically. Unlike one-step, there are no pre-arranged attacks, forcing participants to adapt in real-time. This drill is essential for developing ring awareness, managing adrenaline, and testing techniques against a resisting opponent. Variations include point-sparring (stopping after a point is scored) and continuous sparring.',
+        keyFocusAreas: ['Strategy & Adaptability', 'Endurance & Stamina', 'Reaction Time', 'Ring Management'],
+        equipment: ['Partner', 'Full sparring gear: Hogu, headgear, shin guards, arm guards, mouthguard, groin cup (for males)'],
+        safetyTips: [
+            'Always wear complete, properly-fitted protective gear.',
+            'Agree on the intensity level with your partner beforehand (e.g., light contact, no head contact).',
+            'A referee or instructor should supervise to ensure safety and enforce rules.',
+            'Never spar when angry or overly tired.'
+        ],
+        style: 'var(--green)'
+    },
+    {
+        title: 'Counter-Attacks (Bada Chagi)',
+        description: 'Drills focused on reacting to an opponent\'s attack with an immediate counter, turning their offense into an opportunity. This involves evading, blocking, or angling off to create an opening for a strike. A common variation is the "attack-the-attacker" drill, where the defender executes a technique (like a side kick) as the opponent is chambering their own kick. This skill set is a hallmark of an advanced fighter, transforming a defensive mindset into an offensive one.',
+        keyFocusAreas: ['Defensive Timing', 'Situational Awareness', 'Explosive Power', 'Footwork & Angling'],
+        equipment: ['Partner', 'Pads or kicking shield', 'Optional: Sparring gear'],
+        safetyTips: [
+            'The attacker should execute their technique with predictable timing initially.',
+            'The defender should focus on the timing of the counter, not raw power.',
+            'Use kicking pads or shields to allow for safe, full-power counters.',
+            'Both partners should be aware of their surroundings to avoid collisions.'
+        ],
+        style: 'var(--blue)'
+    },
+];
+
 const trainingProgramsData = [
     {
         level: 'Beginner',
@@ -217,7 +259,9 @@ const getVideoPromptForTechnique = (techniqueName: string): string => {
         // Virtual Dojo
         'Virtual Instructor Intro': `A high-definition, 1080p, 30fps video. A female Taekwondo master, "Master Jin," with a confident and welcoming expression, is in a futuristic, minimalist dojo with neon blue accents. She performs a respectful Taekwondo bow towards the camera. Master Jin should speak with a clear, welcoming voice, saying: 'Welcome to the Virtual Dojo. I am Master Jin, your guide on this journey. Let's begin.' The video must include synchronized lip movements and high-quality audio.`,
         'Virtual Warm-up': `${virtualDojoPrompt} The practitioner demonstrates a dynamic warm-up routine. The sequence should include neck rotations, arm circles, torso twists, leg swings, and light jogging on the spot. Include a subtle, motivating background music track and occasional voice-over cues like 'Good, now switch sides.' or 'Keep your breathing steady.' The audio must be clear.`,
-        'Virtual Stance Clinic': `${virtualDojoPrompt} A tutorial-style video. The camera focuses from a low angle on the feet and legs of the master. The video demonstrates a slow, precise transition between Walking Stance, Front Stance, and Back Stance. A clear, instructional voice-over must name each stance as it is demonstrated: 'Walking Stance... Front Stance... Back Stance.' The audio quality should be excellent.`
+        'Virtual Stance Clinic': `${virtualDojoPrompt} A tutorial-style video. The camera focuses from a low angle on the feet and legs of the master. The video demonstrates a slow, precise transition between Walking Stance, Front Stance, and Back Stance. A clear, instructional voice-over must name each stance as it is demonstrated: 'Walking Stance... Front Stance... Back Stance.' The audio quality should be excellent.`,
+        'Advanced Kicking Clinic': `${virtualDojoPrompt} A tutorial on advanced kicks. The video demonstrates a sequence: Spinning Hook Kick, Jumping Front Kick, and a 360-degree Roundhouse Kick. Each kick is shown at full speed, then in slow-motion with on-screen labels. A clear, instructional voice-over must explain the key mechanics for each kick, focusing on hip rotation and balance. The audio quality must be excellent.`,
+        'Sparring Strategy Session': `A high-definition, 1080p, 30fps video. Two practitioners in a futuristic dojo demonstrate controlled sparring drills. Two scenarios are shown: 1) Evading a roundhouse kick and countering with a back kick. 2) Blocking a punch and countering with a side kick. The video must use slow-motion and graphical overlays (e.g., arrows) to highlight footwork and timing. A strategic voice-over explains the principles of distance and turning defense into offense. The audio must be clear.`
     };
 
     return techniquePrompts[techniqueName] || `${basePrompt} Demonstrate the ${techniqueName}. The video should use a side-view perspective and include a slow-motion replay to ensure clarity of the movement and perfect form.`;
@@ -459,14 +503,12 @@ const App = () => {
 
             if (e instanceof Error) {
                 const errorMessage = e.message.toLowerCase();
-                // Check for specific quota/exhausted keywords
                 if (errorMessage.includes('quota') || errorMessage.includes('resource_exhausted')) {
                     errorPayload = {
                         message: "You've reached the API usage limit for video generation. To continue, please check your Google AI Studio account for more details or set up billing.",
                         type: 'quota'
                     };
                 } else {
-                    // Try to parse a more specific error message if it's in the response
                     try {
                         const jsonMatch = e.message.match(/{.*}/);
                         if (jsonMatch) {
@@ -558,6 +600,7 @@ const App = () => {
                     <nav className="tab-nav">
                         <button className={`tab-button ${activeTab === 'journey' ? 'active' : ''}`} onClick={() => setActiveTab('journey')}>The Journey</button>
                         <button className={`tab-button ${activeTab === 'techniques' ? 'active' : ''}`} onClick={() => setActiveTab('techniques')}>Techniques</button>
+                        <button className={`tab-button ${activeTab === 'sparring' ? 'active' : ''}`} onClick={() => setActiveTab('sparring')}>Sparring Drills</button>
                         <button className={`tab-button ${activeTab === 'programs' ? 'active' : ''}`} onClick={() => setActiveTab('programs')}>Training Programs</button>
                         <button className={`tab-button ${activeTab === 'dojo' ? 'active' : ''}`} onClick={() => setActiveTab('dojo')}>Virtual Dojo</button>
                         <button className={`tab-button ${activeTab === 'timer' ? 'active' : ''}`} onClick={() => setActiveTab('timer')}>Practice Timer</button>
@@ -679,6 +722,45 @@ const App = () => {
                                 </div>
                             </section>
                         )}
+                        
+                        {activeTab === 'sparring' && (
+                            <section className="section">
+                                <h2 className="section-title">Sparring Drills</h2>
+                                <p className="section-subtitle">Hone your combat skills with structured drills for timing, defense, and strategy.</p>
+                                <div className="program-grid">
+                                    {sparringDrillsData.map((drill, index) => {
+                                        const prompt = `Provide a detailed breakdown of the Taekwondo drill: ${drill.title}. Explain the purpose, step-by-step execution for both attacker and defender (if applicable), common variations, and key points to focus on for improvement.`;
+                                        return (
+                                            <div key={index} className="program-card" style={{ borderLeftColor: drill.style }}>
+                                                <h3>{drill.title}</h3>
+                                                <p>{drill.description}</p>
+                                                
+                                                <div className="program-details">
+                                                    <h5>Key Focus Areas:</h5>
+                                                    <ul>
+                                                        {drill.keyFocusAreas.map((item, i) => <li key={i}>{item}</li>)}
+                                                    </ul>
+                                                    
+                                                    <h5>Required Equipment:</h5>
+                                                    <ul>
+                                                        {drill.equipment.map((item, i) => <li key={i}>{item}</li>)}
+                                                    </ul>
+
+                                                    <h5>Safety Tips:</h5>
+                                                    <ul>
+                                                        {drill.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                                                    </ul>
+                                                </div>
+                                                
+                                                <button className="program-button" onClick={() => handleContextualSubmit(prompt)}>
+                                                    Ask AI for Variations & Tips
+                                                </button>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </section>
+                        )}
 
                         {activeTab === 'programs' && (
                             <section className="section">
@@ -756,6 +838,20 @@ const App = () => {
                                         <p>Refine your foundational stances with a focused tutorial.</p>
                                         <button className="dojo-button" onClick={() => openVideoModal('Virtual Stance Clinic')}>
                                             Begin Stance Practice
+                                        </button>
+                                    </div>
+                                    <div className="dojo-card">
+                                        <h3>Advanced Kicking Clinic</h3>
+                                        <p>Master spinning and jumping kicks with an in-depth tutorial.</p>
+                                        <button className="dojo-button" onClick={() => openVideoModal('Advanced Kicking Clinic')}>
+                                            Master Advanced Kicks
+                                        </button>
+                                    </div>
+                                    <div className="dojo-card">
+                                        <h3>Sparring Strategy</h3>
+                                        <p>Learn defensive maneuvers and effective counter-attacks.</p>
+                                        <button className="dojo-button" onClick={() => openVideoModal('Sparring Strategy Session')}>
+                                            Learn Sparring Tactics
                                         </button>
                                     </div>
                                 </div>
