@@ -269,9 +269,6 @@ const getVideoPromptForTechnique = (techniqueName: string): string => {
 
 type VideoError = { message: string; type: 'quota' | 'generic' };
 
-// Initialize Gemini AI client. Assumes API_KEY is set in the environment.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 const App = () => {
     // AI State
     const [prompt, setPrompt] = useState('Explain the history of Taekwondo.');
@@ -283,8 +280,10 @@ const App = () => {
     const [activeModalTechnique, setActiveModalTechnique] = useState<string | null>(null);
     const [copySuccess, setCopySuccess] = useState(false);
 
-    // Theme Customizer State
-    const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
+    // Settings State
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [apiKey, setApiKey] = useState(localStorage.getItem('gemini-api-key') || '');
+    const [tempApiKey, setTempApiKey] = useState(apiKey);
     const defaultBgUrl = 'https://images.unsplash.com/photo-1620152288427-4860b7692138?q=80&w=2574&auto=format&fit=crop';
     const [bgUrl, setBgUrl] = useState(localStorage.getItem('tkd-bg-url') || defaultBgUrl);
     const [tempBgUrl, setTempBgUrl] = useState(bgUrl);
@@ -293,6 +292,8 @@ const App = () => {
     const [activeTab, setActiveTab] = useState('journey');
     const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
+    // AI Client
+    const ai = React.useMemo(() => (apiKey ? new GoogleGenAI({ apiKey }) : null), [apiKey]);
 
     // Timer State
     const [timerPreset, setTimerPreset] = useState(Object.keys(timerPresets)[0]);
@@ -303,6 +304,13 @@ const App = () => {
     
     // Video Player Ref
     const videoRef = useRef<HTMLVideoElement>(null);
+
+    // Open settings modal on first visit if no API key is found
+    useEffect(() => {
+        if (!apiKey) {
+            setIsSettingsOpen(true);
+        }
+    }, []);
 
     useEffect(() => {
         if (bgUrl) {
@@ -383,9 +391,11 @@ const App = () => {
         };
     }, [activeModalTechnique]);
 
-    const handleApplyCustomization = () => {
+    const handleApplySettings = () => {
+        setApiKey(tempApiKey);
+        localStorage.setItem('gemini-api-key', tempApiKey);
         setBgUrl(tempBgUrl);
-        setIsCustomizerOpen(false);
+        setIsSettingsOpen(false);
     };
 
     const handleAccordionToggle = (id: string) => {
@@ -414,7 +424,18 @@ const App = () => {
         return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     };
 
+    const ensureApiKey = () => {
+        if (!apiKey || !ai) {
+            setError('Please set your Gemini API Key in the settings before using AI features.');
+            setIsSettingsOpen(true);
+            return false;
+        }
+        return true;
+    };
+
     const generateAnswer = async (currentPrompt) => {
+        if (!ensureApiKey()) return;
+        
         if (!currentPrompt) {
             setError('Please enter a prompt.');
             return;
@@ -463,6 +484,8 @@ const App = () => {
     };
 
     const handleGenerateVideo = async (techniqueName: string) => {
+        if (!ensureApiKey()) return;
+
         setVideoStates(prev => ({ ...prev, [techniqueName]: { isLoading: true } }));
 
         try {
@@ -485,7 +508,7 @@ const App = () => {
                 throw new Error("Video generation succeeded but no download link was provided.");
             }
 
-            const videoResponse = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
+            const videoResponse = await fetch(`${downloadLink}&key=${apiKey}`);
             if (!videoResponse.ok) {
                 throw new Error(`Failed to download video: ${videoResponse.statusText}`);
             }
@@ -969,7 +992,7 @@ const App = () => {
             <footer className="app-footer">
                 <p>&copy; 2024 Taekwondo AI Assistant. All rights reserved.</p>
                 <div className="footer-buttons">
-                     <button className="settings-button" onClick={() => setIsCustomizerOpen(true)} aria-label="Customize theme">
+                     <button className="settings-button" onClick={() => setIsSettingsOpen(true)} aria-label="Settings">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.82 10.93a1 1 0 0 0-1.64-.78l-.13.22a8.03 8.03 0 0 0-1.4-1.4l.22-.13a1 1 0 0 0-.78-1.64L14.2 4.18a1 1 0 0 0-1.2 0l-.5.86a8.03 8.03 0 0 0-1.99 0l-.5-.86a1 1 0 0 0-1.2 0l-1.88 3.02a1 1 0 0 0-.79 1.64l.22.13a8.03 8.03 0 0 0-1.4 1.4l-.13-.22a1 1 0 0 0-1.64.78l-3.02 1.88a1 1 0 0 0 0 1.2l3.02 1.88a1 1 0 0 0 1.64-.78l.13-.22a8.03 8.03 0 0 0 1.4 1.4l-.22.13a1 1 0 0 0 .78 1.64l1.88 3.02a1 1 0 0 0 1.2 0l.5-.86a8.03 8.03 0 0 0 1.99 0l.5.86a1 1 0 0 0 1.2 0l1.88-3.02a1 1 0 0 0 .78-1.64l-.22-.13a8.03 8.03 0 0 0 1.4-1.4l.13.22a1 1 0 0 0 1.64-.78l-3.02-1.88Zm-7.82 5.57a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"></path></svg>
                     </button>
                 </div>
@@ -1020,12 +1043,29 @@ const App = () => {
                 </div>
             )}
 
-            {isCustomizerOpen && (
-                <div className="customizer-overlay" onClick={() => setIsCustomizerOpen(false)}>
+            {isSettingsOpen && (
+                <div className="customizer-overlay" onClick={() => setIsSettingsOpen(false)}>
                     <div className="customizer-modal" onClick={(e) => e.stopPropagation()}>
-                        <h3>Customize Theme</h3>
+                        <h3>Settings</h3>
+                         <p className="modal-description">
+                            To use the AI features of this app, you need a Google Gemini API key. 
+                            Your key is saved securely in your browser's local storage and is never shared.
+                        </p>
                         <div className="form-group">
-                            <label htmlFor="bg-url-input">Background Image URL</label>
+                            <label htmlFor="api-key-input">Gemini API Key</label>
+                            <input
+                                id="api-key-input"
+                                type="password"
+                                value={tempApiKey}
+                                onChange={(e) => setTempApiKey(e.target.value)}
+                                placeholder="Enter your API Key"
+                            />
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="get-key-link">
+                                Get your API Key from Google AI Studio
+                            </a>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="bg-url-input">Background Image URL (Optional)</label>
                             <input
                                 id="bg-url-input"
                                 type="text"
@@ -1035,8 +1075,8 @@ const App = () => {
                             />
                         </div>
                         <div className="customizer-actions">
-                            <button className="cancel-button" onClick={() => setIsCustomizerOpen(false)}>Cancel</button>
-                            <button className="apply-button" onClick={handleApplyCustomization}>Apply</button>
+                            <button className="cancel-button" onClick={() => setIsSettingsOpen(false)}>Cancel</button>
+                            <button className="apply-button" onClick={handleApplySettings}>Save Settings</button>
                         </div>
                     </div>
                 </div>
