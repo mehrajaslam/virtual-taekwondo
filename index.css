@@ -259,6 +259,43 @@ button:disabled {
     margin-bottom: 0;
 }
 
+.belt-promotion-criteria {
+    background-color: #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--blue);
+}
+
+.criteria-title {
+    display: block;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.criteria-list {
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 0.9rem;
+    color: var(--accent-color);
+}
+
+.criteria-list li {
+    padding-left: 0;
+    margin-bottom: 5px;
+}
+
+.criteria-list li:last-child {
+    margin-bottom: 0;
+}
+
+.criteria-list strong {
+    color: var(--secondary-color);
+}
+
 .context-button {
   background-color: transparent;
   border: 2px solid var(--accent-color);

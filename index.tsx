@@ -12,7 +12,12 @@ const beltProgression = [
         trainingTips: [
             "Focus on keeping your back straight and shoulders relaxed in every stance to build a strong foundation.",
             "Practice your Front Kick slowly in front of a mirror to ensure your knee is chambered high before extending."
-        ]
+        ],
+        promotionCriteria: {
+            forms: "None required. Focus on individual movements.",
+            sparring: "Three-step sparring (basic pre-arranged sequences).",
+            knowledge: "Basic terminology (stances, blocks, kicks), Dojo etiquette, How to tie your belt."
+        }
     },
     {
         name: 'Yellow Belt (8th Gup)',
@@ -23,7 +28,12 @@ const beltProgression = [
         trainingTips: [
             "When performing a Roundhouse Kick, pivot your standing foot completely to generate power from your hips, not just your leg.",
             "Memorize Taegeuk Il Jang by breaking it into smaller sections. Practice one section until it's smooth before adding the next."
-        ]
+        ],
+        promotionCriteria: {
+            forms: "Taegeuk Il Jang (Form 1) & Taegeuk Ee Jang (Form 2).",
+            sparring: "One-step sparring (demonstrating block and counter).",
+            knowledge: "Meaning of Taegeuk Il & Ee Jang, Tenets of Taekwondo (Courtesy, Integrity, Perseverance, Self-Control, Indomitable Spirit)."
+        }
     },
     {
         name: 'Green Belt (6th Gup)',
@@ -34,7 +44,12 @@ const beltProgression = [
         trainingTips: [
             "For the Back Kick, always look over your shoulder at the target before executing the kick to ensure accuracy.",
             "In combination kicking, focus on a smooth, continuous flow between kicks rather than executing them as separate movements."
-        ]
+        ],
+        promotionCriteria: {
+            forms: "Taegeuk Sam Jang (Form 3) & Taegeuk Sa Jang (Form 4).",
+            sparring: "Controlled free sparring (light contact), demonstrating footwork and combinations.",
+            knowledge: "Meaning of Taegeuk Sam & Sa Jang, understanding of blocking applications."
+        }
     },
     {
         name: 'Blue Belt (4th Gup)',
@@ -45,7 +60,12 @@ const beltProgression = [
         trainingTips: [
             "In sparring, practice maintaining your guard (hands up) at all times, even when you're tired.",
             "For spinning kicks, spot your target before and after the spin to maintain balance and accuracy."
-        ]
+        ],
+        promotionCriteria: {
+            forms: "Taegeuk Oh Jang (Form 5) & Taegeuk Yuk Jang (Form 6).",
+            sparring: "Free sparring (increased intensity), demonstrating counter-attacks and timing.",
+            knowledge: "Meaning of Taegeuk Oh & Yuk Jang, basic competition rules."
+        }
     },
     {
         name: 'Red Belt (2nd Gup)',
@@ -56,10 +76,15 @@ const beltProgression = [
         trainingTips: [
             "Develop explosive power for jumping kicks by practicing box jumps and squats to strengthen your legs.",
             "For board breaking, focus on speed and aiming *through* the target, not just at the surface. A confident 'Kihap' (yell) helps!"
-        ]
+        ],
+        promotionCriteria: {
+            forms: "Taegeuk Chil Jang (Form 7) & Taegeuk Pal Jang (Form 8).",
+            sparring: "Advanced free sparring, demonstrating strategy, ring management, and advanced combinations.",
+            knowledge: "Meaning of Taegeuk Chil & Pal Jang, history of Taekwondo."
+        }
     },
     {
-        name: 'Brown Belt',
+        name: 'Brown Belt (1st Gup)',
         style: { borderTopColor: 'var(--brown)' },
         description: 'Represents maturity and the ripening of skills, as a student prepares for the final step.',
         focus: 'Refining all techniques and developing a deeper understanding of Taekwondo philosophy.',
@@ -67,7 +92,12 @@ const beltProgression = [
         trainingTips: [
             "Focus on the 'why' behind each movement in your forms. Understand the practical application of each block, strike, and stance.",
             "During advanced sparring, work on setting up your opponent with feints and footwork to create openings for your techniques."
-        ]
+        ],
+        promotionCriteria: {
+            forms: "Review and perfect all 8 Taegeuk forms.",
+            sparring: "Demonstrate mastery in sparring, including setting up techniques and controlling the match.",
+            knowledge: "Deep understanding of the philosophy behind all Taegeuk forms, ability to explain techniques."
+        }
     },
     {
         name: 'Black Belt (1st Dan)',
@@ -78,7 +108,12 @@ const beltProgression = [
         trainingTips: [
             "As a leader, be patient and clear when teaching junior belts. Breaking down techniques into simple steps is key.",
             "Continuously refine your basic techniques. Mastery is not about learning new things, but perfecting the fundamentals."
-        ]
+        ],
+        promotionCriteria: {
+            forms: "Koryo Poomsae, plus a demonstration of a previous form chosen by judges.",
+            sparring: "Multiple rounds of high-level sparring, showcasing endurance and spirit.",
+            knowledge: "Thesis or essay on a Taekwondo topic, ability to teach junior students."
+        }
     },
 ];
 
@@ -714,6 +749,15 @@ const App = () => {
                                                     {belt.trainingTips.map((tip, tipIndex) => (
                                                         <li key={tipIndex}>{tip}</li>
                                                     ))}
+                                                </ul>
+                                            </div>
+
+                                            <div className="belt-promotion-criteria">
+                                                <strong className="criteria-title">Promotion Criteria</strong>
+                                                <ul className="criteria-list">
+                                                    <li><strong>Forms:</strong> {belt.promotionCriteria.forms}</li>
+                                                    <li><strong>Sparring:</strong> {belt.promotionCriteria.sparring}</li>
+                                                    <li><strong>Knowledge:</strong> {belt.promotionCriteria.knowledge}</li>
                                                 </ul>
                                             </div>
 
