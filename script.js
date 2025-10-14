@@ -131,6 +131,28 @@ const techniquesData = [
                 philosophy: 'Teaches the principle of alternating between soft, yielding movements and powerful, decisive strikes, embodying the unpredictable nature of wind.'
             }
         ]
+    },
+    {
+        category: 'Board Breaking (Gyeokpa)',
+        description: 'The discipline of breaking boards to demonstrate power, precision, and mental focus.',
+        id: 'breaking',
+        details: [
+            {
+                title: 'Common Breaking Techniques',
+                techniques: [
+                    { name: 'Downward Hammer Fist Break', belt: 'green', youtubeId: 'J87NQeRs9Bw' },
+                    { name: 'Front Kick Break', belt: 'blue', youtubeId: 'rDAIlfTFDqU' },
+                    { name: 'Side Kick Break', belt: 'blue', youtubeId: '98boTtEjgfw' },
+                ],
+            },
+            {
+                title: 'Safety & Core Principles',
+                belt: 'green',
+                description: 'Board breaking is a test of proper technique, not brute force. It requires correct alignment, speed, and follow-through. Always practice under supervision.',
+                keyMovements: 'Focus on a small target area. Exhale sharply on impact (Kihap) to maximize power. Aim to strike *through* the target, not just at its surface. Ensure your wrist, ankle, and joints are properly aligned to prevent injury.',
+                philosophy: 'Start with re-breakable practice boards before moving to wood. Ensure proper hand and foot conditioning over time. Never attempt a break without a qualified instructor present to hold the board and provide guidance.'
+            }
+        ]
     }
 ];
 
@@ -248,6 +270,11 @@ const getVideoPromptForTechnique = (techniqueName: string): string => {
         'Side Kick (Yeop Chagi)': `${basePrompt} Demonstrate the Side Kick (Yeop Chagi). The video needs a clear side view. It must show the chambering of the kicking leg (pivoting, bringing the knee to the chest) and the powerful thrusting extension. A slow-motion replay is essential.`,
         'Back Kick (Dwi Chagi)': `${basePrompt} Demonstrate the Back Kick (Dwi Chagi). The camera should be positioned to the side and slightly behind the practitioner to capture the look over the shoulder, the chamber, and the powerful, straight-back extension of the leg. Include a slow-motion sequence.`,
         'Crescent Kick (Bandal Chagi)': `${basePrompt} Demonstrate the Crescent Kick (Bandal Chagi), specifically the outward version. Use a front-view angle to clearly show the circular path of the kicking leg. The movement should be shown at normal speed and then in slow-motion to trace the arc.`,
+
+        // Board Breaking
+        'Downward Hammer Fist Break': `${basePrompt} Demonstrate a Downward Hammer Fist Break on a standard pine board held by a partner. Use a front-view angle. The video must show the chambering of the fist high above the head, the body dropping its weight into the strike, and the follow-through. A slow-motion replay must highlight the point of impact with the meaty part of the fist.`,
+        'Front Kick Break': `${basePrompt} Demonstrate a Front Kick Break on a board held at chest height. Use a side-view perspective. The video should clearly show the full sequence: chambering the knee, the powerful snapping extension of the leg, striking with the ball of the foot, and immediately retracting the kick. Include a slow-motion replay of the impact.`,
+        'Side Kick Break': `${basePrompt} Demonstrate a Side Kick Break on a board held at solar plexus height. Use a 45-degree front angle. The video must show the pivot on the supporting foot, the chambering of the kicking leg, the powerful thrusting motion, and striking with the heel/blade of the foot. A slow-motion replay of the impact is essential.`,
 
         // Forms
         'Taegeuk Il Jang (Form 1)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Il Jang (Form 1). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
