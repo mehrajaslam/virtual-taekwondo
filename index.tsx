@@ -8,49 +8,77 @@ const beltProgression = [
         style: { borderTopColor: '#ddd' },
         description: 'Signifies innocence and a blank slate, like a student with no prior knowledge of Taekwondo.',
         focus: 'Fundamental stances, basic blocks, punches, and introductory kicks.',
-        techniques: 'Front Kick, Low Block, Middle Punch'
+        techniques: 'Front Kick, Low Block, Middle Punch',
+        trainingTips: [
+            "Focus on keeping your back straight and shoulders relaxed in every stance to build a strong foundation.",
+            "Practice your Front Kick slowly in front of a mirror to ensure your knee is chambered high before extending."
+        ]
     },
     {
         name: 'Yellow Belt (8th Gup)',
         style: { borderTopColor: 'var(--yellow)' },
         description: 'Represents the earth, from which a plant sprouts and takes root as the foundation of Taekwondo is being laid.',
         focus: 'Improving balance, coordination, and learning the first form (Poomsae).',
-        techniques: 'Roundhouse Kick, Side Kick, Taegeuk Il Jang'
+        techniques: 'Roundhouse Kick, Side Kick, Taegeuk Il Jang',
+        trainingTips: [
+            "When performing a Roundhouse Kick, pivot your standing foot completely to generate power from your hips, not just your leg.",
+            "Memorize Taegeuk Il Jang by breaking it into smaller sections. Practice one section until it's smooth before adding the next."
+        ]
     },
     {
         name: 'Green Belt (6th Gup)',
         style: { borderTopColor: 'var(--green)' },
         description: 'Symbolizes the plant\'s growth as Taekwondo skills begin to develop.',
         focus: 'More complex forms, combination kicks, and introductory one-step sparring.',
-        techniques: 'Back Kick, Combination Kicking, Taegeuk Sam Jang'
+        techniques: 'Back Kick, Combination Kicking, Taegeuk Sam Jang',
+        trainingTips: [
+            "For the Back Kick, always look over your shoulder at the target before executing the kick to ensure accuracy.",
+            "In combination kicking, focus on a smooth, continuous flow between kicks rather than executing them as separate movements."
+        ]
     },
     {
         name: 'Blue Belt (4th Gup)',
         style: { borderTopColor: 'var(--blue)' },
         description: 'Represents the sky or heaven, towards which the plant matures into a towering tree as training progresses.',
         focus: 'Advanced forms, spinning techniques, and the basics of free sparring.',
-        techniques: 'Spinning Hook Kick, Free Sparring, Taegeuk O Jang'
+        techniques: 'Spinning Hook Kick, Free Sparring, Taegeuk O Jang',
+        trainingTips: [
+            "In sparring, practice maintaining your guard (hands up) at all times, even when you're tired.",
+            "For spinning kicks, spot your target before and after the spin to maintain balance and accuracy."
+        ]
     },
     {
         name: 'Red Belt (2nd Gup)',
         style: { borderTopColor: 'var(--red)' },
         description: 'Signifies danger, cautioning the student to exercise control, and warning the opponent to stay away.',
         focus: 'High-level forms, jumping kicks, board breaking, and developing self-control.',
-        techniques: 'Jumping Kicks, Board Breaking, Taegeuk Chil Jang'
+        techniques: 'Jumping Kicks, Board Breaking, Taegeuk Chil Jang',
+        trainingTips: [
+            "Develop explosive power for jumping kicks by practicing box jumps and squats to strengthen your legs.",
+            "For board breaking, focus on speed and aiming *through* the target, not just at the surface. A confident 'Kihap' (yell) helps!"
+        ]
     },
     {
         name: 'Brown Belt',
         style: { borderTopColor: 'var(--brown)' },
         description: 'Represents maturity and the ripening of skills, as a student prepares for the final step.',
         focus: 'Refining all techniques and developing a deeper understanding of Taekwondo philosophy.',
-        techniques: 'Advanced Sparring, All previous forms, Mental conditioning'
+        techniques: 'Advanced Sparring, All previous forms, Mental conditioning',
+        trainingTips: [
+            "Focus on the 'why' behind each movement in your forms. Understand the practical application of each block, strike, and stance.",
+            "During advanced sparring, work on setting up your opponent with feints and footwork to create openings for your techniques."
+        ]
     },
     {
         name: 'Black Belt (1st Dan)',
         style: { borderTopColor: 'var(--primary-color)' },
         description: 'The opposite of white, signifying mastery of the basics. It is not an end, but a new beginning.',
         focus: 'Mastery of all techniques, leadership, teaching, and continued personal growth.',
-        techniques: 'Leadership, Advanced Self-Defense, Koryo Poomsae'
+        techniques: 'Leadership, Advanced Self-Defense, Koryo Poomsae',
+        trainingTips: [
+            "As a leader, be patient and clear when teaching junior belts. Breaking down techniques into simple steps is key.",
+            "Continuously refine your basic techniques. Mastery is not about learning new things, but perfecting the fundamentals."
+        ]
     },
 ];
 
@@ -129,6 +157,34 @@ const techniquesData = [
                 description: 'Represents "Seon" (Wind), symbolizing the dual nature of wind—gentle and yielding, yet powerful and destructive.',
                 keyMovements: 'Introduces the Hammer Fist, Elbow Strike, and combination Side Kick with a hand strike. It emphasizes flexibility and coordination.',
                 philosophy: 'Teaches the principle of alternating between soft, yielding movements and powerful, decisive strikes, embodying the unpredictable nature of wind.'
+            },
+            {
+                title: 'Taegeuk Yuk Jang (Form 6)',
+                belt: 'blue',
+                description: 'Represents "Gam" (Water), symbolizing the flow and adaptability of water. The movements are fluid and continuous.',
+                keyMovements: 'Introduces the Outward Crescent Kick (Bakat Chagi) and a high turning kick. It focuses on flowing transitions and maintaining balance through continuous motion.',
+                philosophy: 'Teaches the practitioner to be adaptable and persistent, like water that can overcome any obstacle by flowing around or through it.'
+            },
+            {
+                title: 'Taegeuk Chil Jang (Form 7)',
+                belt: 'red',
+                description: 'Represents "Gan" (Mountain), symbolizing stability and majesty. The movements are powerful and firmly grounded.',
+                keyMovements: 'Introduces Tiger Stance (Beom Seogi), Knee Strike, and various blocks like the Low Double Knife Hand Block. It emphasizes powerful, deliberate movements.',
+                philosophy: 'Cultivates a sense of stability, composure, and immovable resolve, teaching the practitioner to stand firm and dignified like a mountain.'
+            },
+            {
+                title: 'Taegeuk Pal Jang (Form 8)',
+                belt: 'red',
+                description: 'Represents "Gon" (Earth), symbolizing the creative and receptive nature of the earth. It is the last of the Taegeuk series, summarizing the previous forms.',
+                keyMovements: 'Features combination kicks like the Jumping Front Kick, Double Punch, and Elbow Strikes. It is a comprehensive form that tests a wide range of skills.',
+                philosophy: 'Represents the culmination of the beginner and intermediate journey, teaching the practitioner to embrace both the yin and yang elements of Taekwondo.'
+            },
+            {
+                title: 'Koryo Poomsae',
+                belt: 'black',
+                description: 'The first of the "Dan" or black belt forms. Koryo represents the "Seonbae" spirit of the Koryo dynasty, known for their strong martial spirit and conviction.',
+                keyMovements: 'Features advanced techniques like the Arc Hand Strike, Side Punch, and a variety of complex stances and footwork. The movements are powerful and dignified.',
+                philosophy: 'Symbolizes a strong and unwavering spirit, emphasizing self-control, discipline, and the readiness to defend justice.'
             }
         ]
     },
@@ -282,6 +338,10 @@ const getVideoPromptForTechnique = (techniqueName: string): string => {
         'Taegeuk Sam Jang (Form 3)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sam Jang (Form 3). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
         'Taegeuk Sa Jang (Form 4)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sa Jang (Form 4). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
         'Taegeuk Oh Jang (Form 5)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Oh Jang (Form 5). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
+        'Taegeuk Yuk Jang (Form 6)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Yuk Jang (Form 6). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control, emphasizing the fluidity of motion. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
+        'Taegeuk Chil Jang (Form 7)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Chil Jang (Form 7). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control, emphasizing powerful, stable movements. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
+        'Taegeuk Pal Jang (Form 8)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Pal Jang (Form 8). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control, showcasing a summary of advanced techniques. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
+        'Koryo Poomsae': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Koryo Poomsae (Black Belt Form). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. The movements must be performed with the power, dignity, and precision befitting a black belt form. The video should be at a deliberate, steady pace for clear observation.`,
         
         // Virtual Dojo
         'Virtual Instructor Intro': `A high-definition, 1080p, 30fps video. A female Taekwondo master, "Master Jin," with a confident and welcoming expression, is in a futuristic, minimalist dojo with neon blue accents. She performs a respectful Taekwondo bow towards the camera. Master Jin should speak with a clear, welcoming voice, saying: 'Welcome to the Virtual Dojo. I am Master Jin, your guide on this journey. Let's begin.' The video must include synchronized lip movements and high-quality audio.`,
@@ -647,6 +707,16 @@ const App = () => {
                                             <div className="belt-card-skill">
                                                 Common Techniques: {belt.techniques}
                                             </div>
+
+                                            <div className="belt-training-tips">
+                                                <strong className="tips-title">Training Tips</strong>
+                                                <ul className="tips-list">
+                                                    {belt.trainingTips.map((tip, tipIndex) => (
+                                                        <li key={tipIndex}>{tip}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
                                             <button className="context-button" onClick={() => handleContextualSubmit(`Explain the significance and key techniques for the ${belt.name}.`)}>
                                                 Ask AI about this Belt
                                             </button>
@@ -733,11 +803,9 @@ const App = () => {
                                                                             <button className="context-button" onClick={() => handleContextualSubmit(`Explain ${card.title} in detail. Describe its purpose, key movements, and the philosophical concepts it represents.`)}>
                                                                                 Ask AI about this Form
                                                                             </button>
-                                                                            {card.title.includes("Taegeuk") && (
-                                                                                <button className="video-button" onClick={() => openVideoModal(card.title)} disabled={videoStates[card.title]?.isLoading}>
-                                                                                    {videoStates[card.title]?.isLoading ? 'Generating...' : 'Watch Video'}
-                                                                                </button>
-                                                                            )}
+                                                                            <button className="video-button" onClick={() => openVideoModal(card.title)} disabled={videoStates[card.title]?.isLoading}>
+                                                                                {videoStates[card.title]?.isLoading ? 'Generating...' : 'Watch Video'}
+                                                                            </button>
                                                                         </div>
                                                                     </div>
                                                                 )}
