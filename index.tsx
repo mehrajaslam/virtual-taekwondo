@@ -339,44 +339,45 @@ const timerPresets = {
 };
 
 const getVideoPromptForTechnique = (techniqueName: string): string => {
-    const basePrompt = `A high-definition, 1080p, 30fps video of a Taekwondo practitioner in a traditional white dobok, set in a clean, minimalist dojo with wooden floors. The video must clearly demonstrate the technique with precision and control.`;
+    // New base prompt with instructions for voice-over, multiple angles, and slow motion.
+    const basePrompt = `A high-definition, 1080p, 30fps video of a Taekwondo practitioner in a traditional white dobok, set in a clean, minimalist dojo with wooden floors. The video must clearly demonstrate the technique with precision and control. It must include a clear, instructional voice-over in English, explaining the key steps, proper form, and common mistakes to avoid. The video should feature multiple camera angles (front and side views) and use slow-motion to highlight critical movements.`;
     const virtualDojoPrompt = `A high-definition, 1080p, 30fps video. A Taekwondo practitioner in a sleek, modern dobok is in a futuristic, minimalist dojo with neon blue accents.`;
 
     const techniquePrompts: Record<string, string> = {
         // Stances
-        'Ready Stance (Joonbi Seogi)': `${basePrompt} Demonstrate the Ready Stance (Joonbi Seogi). The camera should be front-facing. Show the practitioner starting from a relaxed position, then moving hands and feet into the formal ready stance, holding for 3 seconds.`,
-        'Walking Stance (Ap Seogi)': `${basePrompt} Demonstrate the Walking Stance (Ap Seogi). Use a side-view perspective to clearly show the foot placement, step length, and weight distribution as the practitioner takes a few steps forward.`,
-        'Front Stance (Ap Kubi)': `${basePrompt} Demonstrate the Front Stance (Ap Kubi). The camera should be at a low, 45-degree side angle to emphasize the deep bend in the front knee and the straight back leg. Show a slow-motion transition into the stance.`,
-        'Back Stance (Dwit Kubi)': `${basePrompt} Demonstrate the Back Stance (Dwit Kubi). Use a side-view angle to highlight the L-shape of the feet and the majority of the weight on the back leg. The movement should be deliberate and stable.`,
+        'Ready Stance (Joonbi Seogi)': `${basePrompt} Demonstrate the Ready Stance (Joonbi Seogi). The voice-over should explain the meaning of 'Joonbi' (ready) and instruct on correct foot placement (one foot-length apart, parallel), hand positioning (forming fists, rising to solar plexus, then moving down), and maintaining a straight but relaxed posture.`,
+        'Walking Stance (Ap Seogi)': `${basePrompt} Demonstrate the Walking Stance (Ap Seogi). The voice-over should explain its use for moving forward and backward. Instructions should cover the length (one shoulder-width), width (one shoulder-width), and weight distribution (roughly 60% front, 40% back).`,
+        'Front Stance (Ap Kubi)': `${basePrompt} Demonstrate the Front Stance (Ap Kubi). The voice-over should emphasize its power and stability. Instructions must cover the deep bend in the front knee (so the kneecap is over the ankle), the straight back leg, and weight distribution (70% front, 30% back).`,
+        'Back Stance (Dwit Kubi)': `${basePrompt} Demonstrate the Back Stance (Dwit Kubi). The voice-over should explain its defensive nature. Instructions must focus on the L-shape of the feet, the 90-degree angle between them, and the weight distribution (70% on the back leg).`,
 
         // Blocks
-        'Low Block (Arae Makgi)': `${basePrompt} Demonstrate the Low Block (Arae Makgi). Use a front-view perspective. Show the full motion in slow-motion, including the chambering of the arm across the shoulder and the final downward block.`,
-        'Inner Forearm Block (Momtong An Makgi)': `${basePrompt} Demonstrate the Inner Forearm Block (Momtong An Makgi). Use a 45-degree front angle. The video should emphasize the rotation of the forearm and the final position of the block at solar plexus height. Use slow-motion for clarity.`,
-        'High Block (Olgul Makgi)': `${basePrompt} Demonstrate the High Block (Olgul Makgi). Use a front-view perspective. Clearly show the block rising from the waist, crossing the body, and finishing above the head. A slow-motion replay should be included.`,
-        'Knife Hand Block (Sonnal Makgi)': `${basePrompt} Demonstrate the Knife Hand Block (Sonnal Makgi). Use a side-view to show the preparatory "chamber" and the execution. Use slow-motion to highlight the correct hand shape (knife hand) and the dual motion of the blocking and retracting arms.`,
+        'Low Block (Arae Makgi)': `${basePrompt} Demonstrate the Low Block (Arae Makgi). The voice-over must explain the preparation (chambering the blocking arm across the opposite shoulder) and execution (a sharp downward motion). It should specify the final position of the fist (one fist-width above the knee).`,
+        'Inner Forearm Block (Momtong An Makgi)': `${basePrompt} Demonstrate the Inner Forearm Block (Momtong An Makgi). The voice-over should detail the circular motion, starting from the opposite side of the body and ending at the solar plexus height. Emphasize the rotation of the forearm for blocking power.`,
+        'High Block (Olgul Makgi)': `${basePrompt} Demonstrate the High Block (Olgul Makgi). The voice-over should explain how it protects the head. Instructions must cover the upward sweeping motion, crossing the arms, and the final position (one fist-width above the forehead at a 45-degree angle).`,
+        'Knife Hand Block (Sonnal Makgi)': `${basePrompt} Demonstrate the Knife Hand Block (Sonnal Makgi). The voice-over needs to explain the "knife hand" shape and the dual motion of the blocking hand and the retracting (guarding) hand. Slow motion should focus on the hand shape and the block's execution.`,
 
         // Kicks
-        'Front Snap Kick (Ap Chagi)': `${basePrompt} Demonstrate the Front Snap Kick (Ap Chagi). The video should have two slow-motion shots: a side view showing the knee lift and the "snap" extension, and a front view showing the kick aimed at a target.`,
-        'Roundhouse Kick (Dollyo Chagi)': `${basePrompt} Demonstrate the Roundhouse Kick (Dollyo Chagi). Use a dynamic side-view angle. Show the pivot on the standing foot, the hip rotation, and the kick extension in one fluid motion, followed by a slow-motion replay of the key mechanics.`,
-        'Side Kick (Yeop Chagi)': `${basePrompt} Demonstrate the Side Kick (Yeop Chagi). The video needs a clear side view. It must show the chambering of the kicking leg (pivoting, bringing the knee to the chest) and the powerful thrusting extension. A slow-motion replay is essential.`,
-        'Back Kick (Dwi Chagi)': `${basePrompt} Demonstrate the Back Kick (Dwi Chagi). The camera should be positioned to the side and slightly behind the practitioner to capture the look over the shoulder, the chamber, and the powerful, straight-back extension of the leg. Include a slow-motion sequence.`,
-        'Crescent Kick (Bandal Chagi)': `${basePrompt} Demonstrate the Crescent Kick (Bandal Chagi), specifically the outward version. Use a front-view angle to clearly show the circular path of the kicking leg. The movement should be shown at normal speed and then in slow-motion to trace the arc.`,
+        'Front Snap Kick (Ap Chagi)': `${basePrompt} Demonstrate the Front Snap Kick (Ap Chagi). The voice-over must break down the four stages: chambering the knee, extending the leg (the "snap"), striking with the ball of the foot, and re-chambering before returning to stance.`,
+        'Roundhouse Kick (Dollyo Chagi)': `${basePrompt} Demonstrate the Roundhouse Kick (Dollyo Chagi). The voice-over must explain the importance of pivoting on the supporting foot and rotating the hips to generate power. Slow-motion should highlight the pivot and hip rotation.`,
+        'Side Kick (Yeop Chagi)': `${basePrompt} Demonstrate the Side Kick (Yeop Chagi). The voice-over should explain the chambering (bringing the knee to the chest and pivoting) and the powerful thrusting motion, striking with the blade of the foot or the heel.`,
+        'Back Kick (Dwi Chagi)': `${basePrompt} Demonstrate the Back Kick (Dwi Chagi). The voice-over must instruct the practitioner to look over their shoulder at the target before executing the kick. It should describe the straight-back trajectory and striking with the heel.`,
+        'Crescent Kick (Bandal Chagi)': `${basePrompt} Demonstrate the Crescent Kick (Bandal Chagi), both outward and inward versions. The voice-over should explain the circular "slapping" motion of the kick and its use for blocking or striking.`,
 
         // Board Breaking
-        'Downward Hammer Fist Break': `${basePrompt} Demonstrate a Downward Hammer Fist Break on a standard pine board held by a partner. Use a front-view angle. The video must show the chambering of the fist high above the head, the body dropping its weight into the strike, and the follow-through. A slow-motion replay must highlight the point of impact with the meaty part of the fist.`,
-        'Front Kick Break': `${basePrompt} Demonstrate a Front Kick Break on a board held at chest height. Use a side-view perspective. The video should clearly show the full sequence: chambering the knee, the powerful snapping extension of the leg, striking with the ball of the foot, and immediately retracting the kick. Include a slow-motion replay of the impact.`,
-        'Side Kick Break': `${basePrompt} Demonstrate a Side Kick Break on a board held at solar plexus height. Use a 45-degree front angle. The video must show the pivot on the supporting foot, the chambering of the kicking leg, the powerful thrusting motion, and striking with the heel/blade of the foot. A slow-motion replay of the impact is essential.`,
+        'Downward Hammer Fist Break': `${basePrompt} Demonstrate a Downward Hammer Fist Break on a standard pine board held by a partner. The voice-over must explain the principles of power generation: using body weight, speed, and focus. Instructions should cover proper fist formation (hammer fist) and aiming *through* the target.`,
+        'Front Kick Break': `${basePrompt} Demonstrate a Front Kick Break on a board. The voice-over should reiterate the key points of the Front Kick but emphasize generating maximum power and speed for the break, striking with the ball of the foot.`,
+        'Side Kick Break': `${basePrompt} Demonstrate a Side Kick Break on a board. The voice-over must focus on the powerful thrust from the hip and striking with the heel or blade of the foot. It should also cover proper body alignment to prevent injury.`,
         
         // Forms
-        'Taegeuk Il Jang (Form 1)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Il Jang (Form 1). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Taegeuk Ee Jang (Form 2)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Ee Jang (Form 2). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Taegeuk Sam Jang (Form 3)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sam Jang (Form 3). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Taegeuk Sa Jang (Form 4)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sa Jang (Form 4). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Taegeuk Oh Jang (Form 5)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Oh Jang (Form 5). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Taegeuk Yuk Jang (Form 6)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Yuk Jang (Form 6). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control, emphasizing the fluidity of motion. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Taegeuk Chil Jang (Form 7)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Chil Jang (Form 7). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control, emphasizing powerful, stable movements. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Taegeuk Pal Jang (Form 8)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Pal Jang (Form 8). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. Each stance and technique should be performed with precision and control, showcasing a summary of advanced techniques. The video should be at a deliberate, steady pace to allow for clear observation of the form's sequence.`,
-        'Koryo Poomsae': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Koryo Poomsae (Black Belt Form). The camera should follow the practitioner from a slightly elevated, wide-angle perspective to capture all movements and transitions within a traditional dojo setting. The movements must be performed with the power, dignity, and precision befitting a black belt form. The video should be at a deliberate, steady pace for clear observation.`,
+        'Taegeuk Il Jang (Form 1)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Il Jang (Form 1). The camera should follow the practitioner from multiple angles (front, side, and elevated wide-angle) to capture all movements and transitions. A clear, instructional voice-over should announce the name of each major technique (e.g., 'Low Block in Walking Stance', 'Middle Punch in Front Stance') as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Ee Jang (Form 2)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Ee Jang (Form 2). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Sam Jang (Form 3)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sam Jang (Form 3). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Sa Jang (Form 4)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sa Jang (Form 4). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Oh Jang (Form 5)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Oh Jang (Form 5). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Yuk Jang (Form 6)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Yuk Jang (Form 6). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Chil Jang (Form 7)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Chil Jang (Form 7). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Pal Jang (Form 8)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Pal Jang (Form 8). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Koryo Poomsae': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Koryo Poomsae (Black Belt Form). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed with power and dignity. The video should be at a deliberate, steady pace.`,
         
         // Virtual Dojo
         'Virtual Instructor Intro': `A high-definition, 1080p, 30fps video. A female Taekwondo master, "Master Jin," with a confident and welcoming expression, is in a futuristic, minimalist dojo with neon blue accents. She performs a respectful Taekwondo bow towards the camera. Master Jin should speak with a clear, welcoming voice, saying: 'Welcome to the Virtual Dojo. I am Master Jin, your guide on this journey. Let's begin.' The video must include synchronized lip movements and high-quality audio.`,
@@ -386,7 +387,7 @@ const getVideoPromptForTechnique = (techniqueName: string): string => {
         'Sparring Strategy Session': `A high-definition, 1080p, 30fps video. Two practitioners in a futuristic dojo demonstrate controlled sparring drills. Two scenarios are shown: 1) Evading a roundhouse kick and countering with a back kick. 2) Blocking a punch and countering with a side kick. The video must use slow-motion and graphical overlays (e.g., arrows) to highlight footwork and timing. A strategic voice-over explains the principles of distance and turning defense into offense. The audio must be clear.`
     };
 
-    return techniquePrompts[techniqueName] || `${basePrompt} Demonstrate the ${techniqueName}. The video should use a side-view perspective and include a slow-motion replay to ensure clarity of the movement and perfect form.`;
+    return techniquePrompts[techniqueName] || `${basePrompt} Demonstrate the ${techniqueName}. The voice-over should provide a step-by-step guide to performing the technique correctly.`;
 };
 
 type VideoError = { message: string; type: 'quota' | 'generic' };
@@ -394,12 +395,23 @@ type VideoError = { message: string; type: 'quota' | 'generic' };
 // Initialize Gemini AI client. Assumes API_KEY is set in the environment.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+// Helper function to parse promotion criteria strings into a clean array
+const parseCriteria = (criteriaString: string): string[] => {
+    if (!criteriaString || criteriaString.toLowerCase().includes('none required')) return [];
+    return criteriaString
+        .replace(/\.$/, '') // Remove trailing period
+        .split(/[,&]+/) // Split by comma or ampersand
+        .map(item => item.trim())
+        .filter(Boolean); // Filter out empty strings
+};
+
+
 const App = () => {
     // AI State
     const [prompt, setPrompt] = useState('Explain the history of Taekwondo.');
     const [response, setResponse] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState<VideoError | null>(null);
     const [openAccordion, setOpenAccordion] = useState('foundations');
     const [videoStates, setVideoStates] = useState<Record<string, { url?: string; isLoading: boolean; error?: VideoError }>>({});
     const [activeModalTechnique, setActiveModalTechnique] = useState<string | null>(null);
@@ -414,6 +426,17 @@ const App = () => {
     // UI State
     const [activeTab, setActiveTab] = useState('journey');
     const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
+    // Progress Tracker State
+    const [progressData, setProgressData] = useState(() => {
+        try {
+            const savedProgress = localStorage.getItem('tkd-progress');
+            return savedProgress ? JSON.parse(savedProgress) : {};
+        } catch (error) {
+            console.error("Could not load progress data", error);
+            return {};
+        }
+    });
 
 
     // Timer State
@@ -435,6 +458,15 @@ const App = () => {
             localStorage.removeItem('tkd-bg-url');
         }
     }, [bgUrl]);
+
+    // Save progress to localStorage whenever it changes
+    useEffect(() => {
+        try {
+            localStorage.setItem('tkd-progress', JSON.stringify(progressData));
+        } catch (error) {
+            console.error("Could not save progress data", error);
+        }
+    }, [progressData]);
     
     // Timer Effect
     useEffect(() => {
@@ -529,6 +561,19 @@ const App = () => {
         setIsTimerActive(false);
         setTimeRemaining(timerPresets[timerPreset].duration);
     };
+
+    const handleProgressChange = (beltName: string, criterion: string, isChecked: boolean) => {
+        setProgressData(prev => {
+            const newBeltProgress = { ...(prev[beltName] || {}), [criterion]: isChecked };
+            return { ...prev, [beltName]: newBeltProgress };
+        });
+    };
+
+    const handleResetProgress = () => {
+        if (window.confirm("Are you sure you want to reset all your progress? This action cannot be undone.")) {
+            setProgressData({});
+        }
+    };
     
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -538,12 +583,12 @@ const App = () => {
 
     const generateAnswer = async (currentPrompt) => {
         if (!currentPrompt) {
-            setError('Please enter a prompt.');
+            setError({ message: 'Please enter a prompt.', type: 'generic' });
             return;
         }
 
         setLoading(true);
-        setError('');
+        setError(null);
         setResponse('');
         document.getElementById('ai-section')?.scrollIntoView({ behavior: 'smooth' });
 
@@ -555,30 +600,37 @@ const App = () => {
             setResponse(result.text);
         } catch (e) {
             console.error(e);
-            let errorMessageText = 'An unknown error occurred while generating content.';
+            let errorPayload: VideoError = { 
+                message: 'An unknown error occurred while generating content.', 
+                type: 'generic' 
+            };
+
             if (e instanceof Error) {
                 const errorMessage = e.message.toLowerCase();
                 if (errorMessage.includes('quota') || errorMessage.includes('resource_exhausted')) {
-                    errorMessageText = "You've reached the API usage limit for generating answers. Please check your Google AI Studio account for more details or to set up billing.";
+                    errorPayload = {
+                        message: "You've reached the API usage limit for generating answers. To continue, please check your Google AI Studio account for more details or set up billing.",
+                        type: 'quota'
+                    };
                 } else {
-                     try {
+                    try {
                         const jsonMatch = e.message.match(/{.*}/);
                         if (jsonMatch) {
                             const errorJson = JSON.parse(jsonMatch[0]);
                             if (errorJson.error?.message) {
-                                errorMessageText = `Failed to generate content: ${errorJson.error.message}`;
+                                errorPayload.message = `Failed to generate content: ${errorJson.error.message}`;
                             } else {
-                                errorMessageText = `Failed to generate content: ${e.message}`;
+                                errorPayload.message = `Failed to generate content: ${e.message}`;
                             }
                         } else {
-                            errorMessageText = `Failed to generate content: ${e.message}`;
+                            errorPayload.message = `Failed to generate content: ${e.message}`;
                         }
                     } catch (parseError) {
-                        errorMessageText = `Failed to generate content: ${e.message}`;
+                        errorPayload.message = `Failed to generate content: ${e.message}`;
                     }
                 }
             }
-            setError(errorMessageText);
+            setError(errorPayload);
         } finally {
             setLoading(false);
         }
@@ -724,6 +776,7 @@ const App = () => {
                         <button className={`tab-button ${activeTab === 'techniques' ? 'active' : ''}`} onClick={() => setActiveTab('techniques')}>Techniques</button>
                         <button className={`tab-button ${activeTab === 'sparring' ? 'active' : ''}`} onClick={() => setActiveTab('sparring')}>Sparring Drills</button>
                         <button className={`tab-button ${activeTab === 'programs' ? 'active' : ''}`} onClick={() => setActiveTab('programs')}>Training Programs</button>
+                        <button className={`tab-button ${activeTab === 'progress' ? 'active' : ''}`} onClick={() => setActiveTab('progress')}>My Progress</button>
                         <button className={`tab-button ${activeTab === 'dojo' ? 'active' : ''}`} onClick={() => setActiveTab('dojo')}>Virtual Dojo</button>
                         <button className={`tab-button ${activeTab === 'timer' ? 'active' : ''}`} onClick={() => setActiveTab('timer')}>Practice Timer</button>
                     </nav>
@@ -939,6 +992,86 @@ const App = () => {
                                 </div>
                             </section>
                         )}
+
+                        {activeTab === 'progress' && (() => {
+                            const completedBelts = beltProgression.filter(belt => {
+                                const allCriteria = [
+                                    ...parseCriteria(belt.promotionCriteria.forms),
+                                    ...parseCriteria(belt.promotionCriteria.sparring),
+                                    ...parseCriteria(belt.promotionCriteria.knowledge),
+                                ];
+                                if (allCriteria.length === 0) return false;
+                                return allCriteria.every(item => progressData[belt.name]?.[item]);
+                            }).length;
+                            const totalBeltsWithCriteria = beltProgression.filter(b => [...parseCriteria(b.promotionCriteria.forms), ...parseCriteria(b.promotionCriteria.sparring), ...parseCriteria(b.promotionCriteria.knowledge)].length > 0).length;
+
+                            return (
+                                <section className="section">
+                                    <h2 className="section-title">My Progress Tracker</h2>
+                                    <p className="section-subtitle">Mark your accomplishments and track your journey to Black Belt.</p>
+                                    
+                                    <div className="progress-summary-card">
+                                        <h4>Overall Progress</h4>
+                                        <p>You have mastered <strong>{completedBelts}</strong> out of <strong>{totalBeltsWithCriteria}</strong> core belt ranks.</p>
+                                        <div className="belt-progress-bar-container">
+                                            <div className="belt-progress-bar-fill" style={{ width: `${(completedBelts / totalBeltsWithCriteria) * 100}%` }}></div>
+                                        </div>
+                                        <button className="reset-progress-button" onClick={handleResetProgress}>Reset All Progress</button>
+                                    </div>
+
+                                    <div className="belt-grid">
+                                        {beltProgression.map((belt) => {
+                                            const criteria = {
+                                                Forms: parseCriteria(belt.promotionCriteria.forms),
+                                                Sparring: parseCriteria(belt.promotionCriteria.sparring),
+                                                Knowledge: parseCriteria(belt.promotionCriteria.knowledge),
+                                            };
+                                            const allCriteria = [...criteria.Forms, ...criteria.Sparring, ...criteria.Knowledge];
+                                            if (allCriteria.length === 0) return null;
+
+                                            const totalCriteriaCount = allCriteria.length;
+                                            const completedCriteriaCount = allCriteria.filter(item => progressData[belt.name]?.[item]).length;
+                                            const progressPercentage = totalCriteriaCount > 0 ? (completedCriteriaCount / totalCriteriaCount) * 100 : 0;
+
+                                            return (
+                                                <div key={belt.name} className="progress-card" style={belt.style}>
+                                                    <h3>{belt.name}</h3>
+                                                    <p>{belt.description}</p>
+                                                    
+                                                    <div className="progress-criteria-container">
+                                                        {Object.entries(criteria).map(([category, items]) => items.length > 0 && (
+                                                            <div key={category} className="progress-criteria-group">
+                                                                <strong>{category}:</strong>
+                                                                <ul className="progress-criteria-list">
+                                                                    {items.map(item => (
+                                                                        <li key={item} className="progress-criteria-item">
+                                                                            <label className="custom-checkbox-container">
+                                                                                <span className="criterion-text">{item}</span>
+                                                                                <input
+                                                                                    type="checkbox"
+                                                                                    checked={!!progressData[belt.name]?.[item]}
+                                                                                    onChange={(e) => handleProgressChange(belt.name, item, e.target.checked)}
+                                                                                />
+                                                                                <span className="checkmark"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+
+                                                    <div className="belt-progress-bar-container">
+                                                        <div className="belt-progress-bar-fill" style={{ width: `${progressPercentage}%` }}></div>
+                                                    </div>
+                                                    <span className="progress-percentage-text">{Math.round(progressPercentage)}% Complete</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </section>
+                            );
+                        })()}
                         
                         {activeTab === 'dojo' && (
                              <section className="section">
@@ -1060,7 +1193,21 @@ const App = () => {
                                 {loading ? 'Generating...' : 'Get Answer'}
                             </button>
                             
-                            {error && <div className="error-message"><strong>Error:</strong> {error}</div>}
+                            {error && (
+                                <div className="error-message">
+                                    <strong>Error:</strong> {error.message}
+                                    {error.type === 'quota' && (
+                                        <a 
+                                            href="https://aistudio.google.com/app/apikey" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="modal-action-button"
+                                        >
+                                            Check Billing Status
+                                        </a>
+                                    )}
+                                </div>
+                            )}
                             
                             {loading && (
                                 <div className="loading-container">
