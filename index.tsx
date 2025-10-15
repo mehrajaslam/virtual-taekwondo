@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI } from "@google/genai";
@@ -117,6 +118,113 @@ const beltProgression = [
     },
 ];
 
+const danProgression = [
+    {
+        dan: '1st Dan (Il Dan)',
+        title: 'Instructor (Jo-kyo-nim)',
+        age: '15+',
+        duration: 'N/A',
+        requirements: [
+            'Poomsae: All 8 Taegeuk forms, Koryo',
+            'Sparring: Advanced free sparring, one-step sparring',
+            'Breaking: Power breaking (hand and foot techniques)',
+            'Knowledge: Taekwondo history, philosophy, and terminology'
+        ]
+    },
+    {
+        dan: '2nd Dan (Ee Dan)',
+        title: 'Instructor (Kyo-sa-nim)',
+        age: '16+',
+        duration: '1 Year',
+        requirements: [
+            'Poomsae: Keumgang',
+            'Sparring: Enhanced proficiency in free sparring',
+            'Breaking: Combination breaking techniques',
+            'Other: Assistant teaching experience'
+        ]
+    },
+    {
+        dan: '3rd Dan (Sam Dan)',
+        title: 'Instructor (Kyo-sa-nim)',
+        age: '18+',
+        duration: '2 Years',
+        requirements: [
+            'Poomsae: Taebaek',
+            'Sparring: Strategic application of techniques',
+            'Breaking: Advanced speed and power breaking',
+            'Other: Increased teaching responsibilities'
+        ]
+    },
+    {
+        dan: '4th Dan (Sa Dan)',
+        title: 'Master (Sa-beom-nim)',
+        age: '21+',
+        duration: '3 Years',
+        requirements: [
+            'Poomsae: Pyongwon, Sipjin',
+            'Sparring: Mastery of competitive strategy',
+            'Breaking: Creative/demonstration breaking',
+            'Other: Completion of Master Instructor course'
+        ]
+    },
+    {
+        dan: '5th Dan (Oh Dan)',
+        title: 'Master (Sa-beom-nim)',
+        age: '25+',
+        duration: '4 Years',
+        requirements: [
+            'Poomsae: Jitae, Chonkwon',
+            'Other: Submission of a research thesis on a Taekwondo topic',
+            'Must demonstrate significant contribution to Taekwondo'
+        ]
+    },
+    {
+        dan: '6th Dan (Yuk Dan)',
+        title: 'Grandmaster (Kwan-jang-nim)',
+        age: '30+',
+        duration: '5 Years',
+        requirements: [
+            'Poomsae: Hansu, Ilyeo',
+            'Other: Continued research and contribution to Taekwondo development',
+            'Recognized leadership within the Taekwondo community'
+        ]
+    },
+    {
+        dan: '7th Dan (Chil Dan)',
+        title: 'Grandmaster (Kwan-jang-nim)',
+        age: '36+',
+        duration: '6 Years',
+        requirements: [
+            'Must be recommended by senior Grandmasters',
+            'Significant, demonstrable contributions to the global Taekwondo community',
+            'Submission of an advanced thesis'
+        ]
+    },
+    {
+        dan: '8th Dan (Pal Dan)',
+        title: 'Grandmaster (Kwan-jang-nim)',
+        age: '44+',
+        duration: '8 Years',
+        requirements: [
+            'Highest level of leadership and influence in Taekwondo',
+            'Appointment requires approval from the Kukkiwon Promotion Committee',
+            'Represents a lifetime of dedication and achievement'
+        ]
+    },
+    {
+        dan: '9th Dan (Gu Dan)',
+        title: 'Grandmaster (Kwan-jang-nim)',
+        age: '53+',
+        duration: '9 Years',
+        requirements: [
+            'The highest attainable rank in Kukkiwon Taekwondo',
+            'Awarded to individuals who have shown exceptional character and made monumental contributions to the art',
+            'Represents the pinnacle of technical, philosophical, and spiritual understanding'
+        ]
+    }
+];
+
+
 const techniquesData = [
     {
         category: 'Foundational Skills',
@@ -126,29 +234,29 @@ const techniquesData = [
             {
                 title: 'Basic Stances (Seogi)',
                 techniques: [
-                    { name: 'Ready Stance (Joonbi Seogi)', belt: 'white', youtubeId: 'luaRUqNIfQE' },
-                    { name: 'Walking Stance (Ap Seogi)', belt: 'white', youtubeId: 'PfrfkKA51Q0' },
-                    { name: 'Front Stance (Ap Kubi)', belt: 'yellow', youtubeId: 'PuWO6aoAFbU' },
-                    { name: 'Back Stance (Dwit Kubi)', belt: 'green', youtubeId: 'cAe5ACVkorY' },
+                    { name: 'Ready Stance (Joonbi Seogi)', belt: 'white', level: 'Beginner', youtubeId: 'luaRUqNIfQE' },
+                    { name: 'Walking Stance (Ap Seogi)', belt: 'white', level: 'Beginner', youtubeId: 'PfrfkKA51Q0' },
+                    { name: 'Front Stance (Ap Kubi)', belt: 'yellow', level: 'Beginner', youtubeId: 'PuWO6aoAFbU' },
+                    { name: 'Back Stance (Dwit Kubi)', belt: 'green', level: 'Intermediate', youtubeId: 'cAe5ACVkorY' },
                 ],
             },
             {
                 title: 'Essential Blocks (Makgi)',
                 techniques: [
-                    { name: 'Low Block (Arae Makgi)', belt: 'white' },
-                    { name: 'Inner Forearm Block (Momtong An Makgi)', belt: 'yellow' },
-                    { name: 'High Block (Olgul Makgi)', belt: 'green' },
-                    { name: 'Knife Hand Block (Sonnal Makgi)', belt: 'blue' },
+                    { name: 'Low Block (Arae Makgi)', belt: 'white', level: 'Beginner' },
+                    { name: 'Inner Forearm Block (Momtong An Makgi)', belt: 'yellow', level: 'Beginner' },
+                    { name: 'High Block (Olgul Makgi)', belt: 'green', level: 'Intermediate' },
+                    { name: 'Knife Hand Block (Sonnal Makgi)', belt: 'blue', level: 'Intermediate' },
                 ],
             },
             {
                 title: 'Fundamental Kicks (Chagi)',
                 techniques: [
-                    { name: 'Front Snap Kick (Ap Chagi)', belt: 'white' },
-                    { name: 'Roundhouse Kick (Dollyo Chagi)', belt: 'yellow' },
-                    { name: 'Side Kick (Yeop Chagi)', belt: 'green' },
-                    { name: 'Back Kick (Dwi Chagi)', belt: 'blue' },
-                    { name: 'Crescent Kick (Bandal Chagi)', belt: 'red' },
+                    { name: 'Front Snap Kick (Ap Chagi)', belt: 'white', level: 'Beginner' },
+                    { name: 'Roundhouse Kick (Dollyo Chagi)', belt: 'yellow', level: 'Beginner' },
+                    { name: 'Side Kick (Yeop Chagi)', belt: 'green', level: 'Intermediate' },
+                    { name: 'Back Kick (Dwi Chagi)', belt: 'blue', level: 'Intermediate' },
+                    { name: 'Crescent Kick (Bandal Chagi)', belt: 'red', level: 'Advanced' },
                 ],
             },
         ],
@@ -161,6 +269,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Il Jang (Form 1)',
                 belt: 'yellow',
+                level: 'Beginner',
                 description: 'Represents "Keon" (Heaven), symbolizing the beginning of creation. It is the foundation of all Taegeuk forms.',
                 keyMovements: 'Walking Stance, Front Stance, Low Block, Inner Forearm Block, Middle Punch, and Front Snap Kick.',
                 philosophy: 'Teaches the basics of movement, focusing on simplicity, power, and building a strong foundation in fundamental stances and blocks.'
@@ -168,6 +277,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Ee Jang (Form 2)',
                 belt: 'yellow',
+                level: 'Beginner',
                 description: 'Represents "Tae" (Joyfulness), symbolizing inner strength expressed with external gentleness and serenity.',
                 keyMovements: 'Introduces High Block and High Punch, while emphasizing fluid transitions and the combination of Front Snap Kicks with punches.',
                 philosophy: 'Focuses on the principle of inner strength with external softness, teaching practitioners to remain calm and joyful even while executing powerful techniques.'
@@ -175,6 +285,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Sam Jang (Form 3)',
                 belt: 'green',
+                level: 'Intermediate',
                 description: 'Represents "Ri" (Fire & Sun), symbolizing passion and energy. The movements are active, varied, and full of life.',
                 keyMovements: 'Introduces Knife Hand Strike, Knife Hand Block, and Back Stance. It emphasizes quick transitions between stances.',
                 philosophy: 'Teaches the ability to control passion and energy. The form encourages practitioners to be dynamic and adaptable, like a flickering flame.'
@@ -182,6 +293,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Sa Jang (Form 4)',
                 belt: 'green',
+                level: 'Intermediate',
                 description: 'Represents "Jin" (Thunder), symbolizing great power and dignity. The movements are powerful and dignified.',
                 keyMovements: 'Features more advanced techniques like Knife Hand Guarding Block, Side Kick, and Swallow Form Strike. It demands stability and power.',
                 philosophy: 'Cultivates calmness and bravery in the face of danger, teaching the practitioner to act with the power and decisiveness of a thunderclap.'
@@ -189,6 +301,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Oh Jang (Form 5)',
                 belt: 'blue',
+                level: 'Intermediate',
                 description: 'Represents "Seon" (Wind), symbolizing the dual nature of wind—gentle and yielding, yet powerful and destructive.',
                 keyMovements: 'Introduces the Hammer Fist, Elbow Strike, and combination Side Kick with a hand strike. It emphasizes flexibility and coordination.',
                 philosophy: 'Teaches the principle of alternating between soft, yielding movements and powerful, decisive strikes, embodying the unpredictable nature of wind.'
@@ -196,6 +309,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Yuk Jang (Form 6)',
                 belt: 'blue',
+                level: 'Intermediate',
                 description: 'Represents "Gam" (Water), symbolizing the flow and adaptability of water. The movements are fluid and continuous.',
                 keyMovements: 'Introduces the Outward Crescent Kick (Bakat Chagi) and a high turning kick. It focuses on flowing transitions and maintaining balance through continuous motion.',
                 philosophy: 'Teaches the practitioner to be adaptable and persistent, like water that can overcome any obstacle by flowing around or through it.'
@@ -203,6 +317,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Chil Jang (Form 7)',
                 belt: 'red',
+                level: 'Advanced',
                 description: 'Represents "Gan" (Mountain), symbolizing stability and majesty. The movements are powerful and firmly grounded.',
                 keyMovements: 'Introduces Tiger Stance (Beom Seogi), Knee Strike, and various blocks like the Low Double Knife Hand Block. It emphasizes powerful, deliberate movements.',
                 philosophy: 'Cultivates a sense of stability, composure, and immovable resolve, teaching the practitioner to stand firm and dignified like a mountain.'
@@ -210,6 +325,7 @@ const techniquesData = [
             {
                 title: 'Taegeuk Pal Jang (Form 8)',
                 belt: 'red',
+                level: 'Advanced',
                 description: 'Represents "Gon" (Earth), symbolizing the creative and receptive nature of the earth. It is the last of the Taegeuk series, summarizing the previous forms.',
                 keyMovements: 'Features combination kicks like the Jumping Front Kick, Double Punch, and Elbow Strikes. It is a comprehensive form that tests a wide range of skills.',
                 philosophy: 'Represents the culmination of the beginner and intermediate journey, teaching the practitioner to embrace both the yin and yang elements of Taekwondo.'
@@ -217,6 +333,7 @@ const techniquesData = [
             {
                 title: 'Koryo Poomsae',
                 belt: 'black',
+                level: 'Advanced',
                 description: 'The first of the "Dan" or black belt forms. Koryo represents the "Seonbae" spirit of the Koryo dynasty, known for their strong martial spirit and conviction.',
                 keyMovements: 'Features advanced techniques like the Arc Hand Strike, Side Punch, and a variety of complex stances and footwork. The movements are powerful and dignified.',
                 philosophy: 'Symbolizes a strong and unwavering spirit, emphasizing self-control, discipline, and the readiness to defend justice.'
@@ -231,14 +348,14 @@ const techniquesData = [
             {
                 title: 'Common Breaking Techniques',
                 techniques: [
-                    { name: 'Downward Hammer Fist Break', belt: 'green', youtubeId: 'J87NQeRs9Bw' },
-                    { name: 'Front Kick Break', belt: 'blue', youtubeId: 'rDAIlfTFDqU' },
-                    { name: 'Side Kick Break', belt: 'blue', youtubeId: '98boTtEjgfw' },
+                    { name: 'Downward Hammer Fist Break', belt: 'green', level: 'Intermediate', youtubeId: 'J87NQeRs9Bw' },
+                    { name: 'Front Kick Break', belt: 'blue', level: 'Intermediate', youtubeId: 'rDAIlfTFDqU' },
+                    { name: 'Side Kick Break', belt: 'blue', level: 'Advanced', youtubeId: '98boTtEjgfw' },
                 ],
             },
             {
                 title: 'Safety & Core Principles',
-                belt: 'green',
+                level: 'Intermediate',
                 description: 'Board breaking is a test of proper technique, not brute force. It requires correct alignment, speed, and follow-through. Always practice under supervision.',
                 keyMovements: 'Focus on a small target area. Exhale sharply on impact (Kihap) to maximize power. Aim to strike *through* the target, not just at its surface. Ensure your wrist, ankle, and joints are properly aligned to prevent injury.',
                 philosophy: 'Start with re-breakable practice boards before moving to wood. Ensure proper hand and foot conditioning over time. Never attempt a break without a qualified instructor present to hold the board and provide guidance.'
@@ -250,21 +367,48 @@ const techniquesData = [
 const sparringDrillsData = [
     {
         title: 'One-Step Sparring (Hanbon Kyorugi)',
-        description: 'A foundational partner drill that bridges the gap between static basic techniques and dynamic free sparring. One person executes a pre-arranged attack, and the other responds with a pre-arranged block and counter-attack. Variations include two-step or three-step sparring for more complex scenarios. This drill is crucial for developing the muscle memory needed to react instinctively and effectively under pressure.',
-        keyFocusAreas: ['Timing & Reaction', 'Distance Control', 'Precision & Accuracy', 'Defensive Application'],
+        level: 'Beginner',
+        style: 'var(--yellow)',
+        detailsByLevel: {
+            Beginner: {
+                description: 'A foundational partner drill focusing on reaction to a single, pre-arranged attack. It builds the muscle memory for blocking and countering, teaching vital concepts of distance and timing in a controlled environment.',
+                keyFocusAreas: ['Correct Stance and Guard', 'Accurate Blocking', 'Basic Counter-Attacks (e.g., punch)', 'Maintaining Balance'],
+            },
+            Intermediate: {
+                description: 'An evolution of the basic drill, incorporating more complex counters and varied attacks. The focus shifts from just reacting to reacting with speed, precision, and a wider range of techniques.',
+                keyFocusAreas: ['Faster Reaction Time', 'Countering with Kicks', 'Controlling Distance (entering and exiting)', 'Adding a Kihap (yell)'],
+            },
+            Advanced: {
+                description: 'At this level, one-step sparring becomes a laboratory for self-defense applications. Counters should be explosive and decisive, often involving multiple strikes, takedowns, or joint-lock setups.',
+                keyFocusAreas: ['Multiple Counter-Attacks', 'Using Footwork to Create Angles', 'Applying Self-Defense Scenarios', 'Seamless Transitions from Defense to Offense'],
+            }
+        },
         equipment: ['Partner', 'Optional: Hogu (chest protector), headgear'],
         safetyTips: [
             'Start slowly to master the sequence before increasing speed.',
             'Maintain clear communication with your partner.',
             'Focus on control; techniques should be stopped just short of making contact.',
             'Always bow to your partner before and after the drill as a sign of respect.'
-        ],
-        style: 'var(--yellow)'
+        ]
     },
     {
         title: 'Free Sparring (Jayu Kyorugi)',
-        description: 'Unrehearsed, continuous sparring simulating a competition match, where practitioners must apply their techniques fluidly and strategically. Unlike one-step, there are no pre-arranged attacks, forcing participants to adapt in real-time. This drill is essential for developing ring awareness, managing adrenaline, and testing techniques against a resisting opponent. Variations include point-sparring (stopping after a point is scored) and continuous sparring.',
-        keyFocusAreas: ['Strategy & Adaptability', 'Endurance & Stamina', 'Reaction Time', 'Ring Management'],
+        level: 'Intermediate',
+        style: 'var(--green)',
+        detailsByLevel: {
+            Beginner: {
+                description: 'Light, controlled free sparring focusing on movement and defense. The goal is not to score points but to get comfortable with the dynamic, unpredictable nature of sparring while practicing basic footwork and blocks.',
+                keyFocusAreas: ['Maintaining Guard', 'Basic Footwork (forward, backward, side-to-side)', 'Using Front Kick to Manage Distance', 'Blocking Basic Attacks'],
+            },
+            Intermediate: {
+                description: 'Unrehearsed sparring simulating a competition match. The focus is on applying techniques fluidly, using combinations, and developing a basic strategy. This is where you connect your drills to real-time application.',
+                keyFocusAreas: ['Using Combinations (e.g., punch-kick)', 'Basic Counter-Attacks', 'Offensive and Defensive Footwork', 'Ring Awareness'],
+            },
+            Advanced: {
+                description: 'High-level, strategic sparring that involves setting up opponents, using feints, and controlling the pace of the match. The focus is on out-thinking the opponent, not just out-fighting them.',
+                keyFocusAreas: ['Advanced Combinations and Feints', 'Strategic Counter-Attacking', 'Ring Management and Control', 'Adapting Strategy Mid-Match'],
+            }
+        },
         equipment: ['Partner', 'Full sparring gear: Hogu, headgear, shin guards, arm guards, mouthguard, groin cup (for males)'],
         safetyTips: [
             'Always wear complete, properly-fitted protective gear.',
@@ -272,12 +416,25 @@ const sparringDrillsData = [
             'A referee or instructor should supervise to ensure safety and enforce rules.',
             'Never spar when angry or overly tired.'
         ],
-        style: 'var(--green)'
     },
     {
         title: 'Counter-Attacks (Bada Chagi)',
-        description: 'Drills focused on reacting to an opponent\'s attack with an immediate counter, turning their offense into an opportunity. This involves evading, blocking, or angling off to create an opening for a strike. A common variation is the "attack-the-attacker" drill, where the defender executes a technique (like a side kick) as the opponent is chambering their own kick. This skill set is a hallmark of an advanced fighter, transforming a defensive mindset into an offensive one.',
-        keyFocusAreas: ['Defensive Timing', 'Situational Awareness', 'Explosive Power', 'Footwork & Angling'],
+        level: 'Advanced',
+        style: 'var(--blue)',
+        detailsByLevel: {
+            Beginner: {
+                description: 'Introduction to the concept of countering. Drills focus on responding to a slow, telegraphed attack with a single, basic counter-attack after a successful block. The goal is to build the "block and respond" instinct.',
+                keyFocusAreas: ['Block-Then-Counter Timing', 'Countering with a Middle Punch', 'Maintaining Guard After Countering', 'Resetting to Stance'],
+            },
+            Intermediate: {
+                description: 'Drills focusing on reacting to an opponent\'s attack with an immediate counter, often turning their offense into an opportunity. This involves evading or angling off to create an opening for a strike.',
+                keyFocusAreas: ['Simultaneous Block and Counter', 'Using Footwork to Evade and Counter', 'Countering with a Side Kick or Roundhouse Kick', 'Anticipating Common Attacks'],
+            },
+            Advanced: {
+                description: 'A hallmark of an expert fighter, these drills focus on "attacking the attacker." Counters are executed as the opponent initiates their own technique, intercepting their movement and capitalizing on their momentary vulnerability.',
+                keyFocusAreas: ['Intercepting an Attack (e.g., cut kick)', 'Drawing an Attack to Set Up a Counter', 'Advanced Footwork for Angle Creation', 'Countering with Spinning or Jumping Kicks'],
+            }
+        },
         equipment: ['Partner', 'Pads or kicking shield', 'Optional: Sparring gear'],
         safetyTips: [
             'The attacker should execute their technique with predictable timing initially.',
@@ -285,7 +442,6 @@ const sparringDrillsData = [
             'Use kicking pads or shields to allow for safe, full-power counters.',
             'Both partners should be aware of their surroundings to avoid collisions.'
         ],
-        style: 'var(--blue)'
     },
 ];
 
@@ -338,46 +494,58 @@ const timerPresets = {
     custom: { label: 'Quick Spar (30 sec)', duration: 30 },
 };
 
-const getVideoPromptForTechnique = (techniqueName: string): string => {
-    // New base prompt with instructions for voice-over, multiple angles, and slow motion.
+const getVideoPromptForTechnique = (techniqueName: string, difficulty: string): string => {
     const basePrompt = `A high-definition, 1080p, 30fps video of a Taekwondo practitioner in a traditional white dobok, set in a clean, minimalist dojo with wooden floors. The video must clearly demonstrate the technique with precision and control. It must include a clear, instructional voice-over in English, explaining the key steps, proper form, and common mistakes to avoid. The video should feature multiple camera angles (front and side views) and use slow-motion to highlight critical movements.`;
     const virtualDojoPrompt = `A high-definition, 1080p, 30fps video. A Taekwondo practitioner in a sleek, modern dobok is in a futuristic, minimalist dojo with neon blue accents.`;
 
+    let difficultyPrompt = '';
+    switch (difficulty) {
+        case 'Beginner':
+            difficultyPrompt = "The video should be paced slowly with extra emphasis on fundamental steps. The voice-over should be very clear and break down each part of the movement simply.";
+            break;
+        case 'Intermediate':
+            difficultyPrompt = "The video should be at a moderate pace, focusing on smooth transitions and power generation. The voice-over should mention common mistakes and how to correct them.";
+            break;
+        case 'Advanced':
+            difficultyPrompt = "The video should be at full speed, demonstrating precision and control. The voice-over can discuss advanced applications, timing, and strategic use of the technique.";
+            break;
+    }
+
     const techniquePrompts: Record<string, string> = {
         // Stances
-        'Ready Stance (Joonbi Seogi)': `${basePrompt} Demonstrate the Ready Stance (Joonbi Seogi). The voice-over should explain the meaning of 'Joonbi' (ready) and instruct on correct foot placement (one foot-length apart, parallel), hand positioning (forming fists, rising to solar plexus, then moving down), and maintaining a straight but relaxed posture.`,
-        'Walking Stance (Ap Seogi)': `${basePrompt} Demonstrate the Walking Stance (Ap Seogi). The voice-over should explain its use for moving forward and backward. Instructions should cover the length (one shoulder-width), width (one shoulder-width), and weight distribution (roughly 60% front, 40% back).`,
-        'Front Stance (Ap Kubi)': `${basePrompt} Demonstrate the Front Stance (Ap Kubi). The voice-over should emphasize its power and stability. Instructions must cover the deep bend in the front knee (so the kneecap is over the ankle), the straight back leg, and weight distribution (70% front, 30% back).`,
-        'Back Stance (Dwit Kubi)': `${basePrompt} Demonstrate the Back Stance (Dwit Kubi). The voice-over should explain its defensive nature. Instructions must focus on the L-shape of the feet, the 90-degree angle between them, and the weight distribution (70% on the back leg).`,
+        'Ready Stance (Joonbi Seogi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Ready Stance (Joonbi Seogi). The voice-over should explain the meaning of 'Joonbi' (ready) and instruct on correct foot placement (one foot-length apart, parallel), hand positioning (forming fists, rising to solar plexus, then moving down), and maintaining a straight but relaxed posture.`,
+        'Walking Stance (Ap Seogi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Walking Stance (Ap Seogi). The voice-over should explain its use for moving forward and backward. Instructions should cover the length (one shoulder-width), width (one shoulder-width), and weight distribution (roughly 60% front, 40% back).`,
+        'Front Stance (Ap Kubi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Front Stance (Ap Kubi). The voice-over should emphasize its power and stability. Instructions must cover the deep bend in the front knee (so the kneecap is over the ankle), the straight back leg, and weight distribution (70% front, 30% back).`,
+        'Back Stance (Dwit Kubi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Back Stance (Dwit Kubi). The voice-over should explain its defensive nature. Instructions must focus on the L-shape of the feet, the 90-degree angle between them, and the weight distribution (70% on the back leg).`,
 
         // Blocks
-        'Low Block (Arae Makgi)': `${basePrompt} Demonstrate the Low Block (Arae Makgi). The voice-over must explain the preparation (chambering the blocking arm across the opposite shoulder) and execution (a sharp downward motion). It should specify the final position of the fist (one fist-width above the knee).`,
-        'Inner Forearm Block (Momtong An Makgi)': `${basePrompt} Demonstrate the Inner Forearm Block (Momtong An Makgi). The voice-over should detail the circular motion, starting from the opposite side of the body and ending at the solar plexus height. Emphasize the rotation of the forearm for blocking power.`,
-        'High Block (Olgul Makgi)': `${basePrompt} Demonstrate the High Block (Olgul Makgi). The voice-over should explain how it protects the head. Instructions must cover the upward sweeping motion, crossing the arms, and the final position (one fist-width above the forehead at a 45-degree angle).`,
-        'Knife Hand Block (Sonnal Makgi)': `${basePrompt} Demonstrate the Knife Hand Block (Sonnal Makgi). The voice-over needs to explain the "knife hand" shape and the dual motion of the blocking hand and the retracting (guarding) hand. Slow motion should focus on the hand shape and the block's execution.`,
+        'Low Block (Arae Makgi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Low Block (Arae Makgi). The voice-over must explain the preparation (chambering the blocking arm across the opposite shoulder) and execution (a sharp downward motion). It should specify the final position of the fist (one fist-width above the knee).`,
+        'Inner Forearm Block (Momtong An Makgi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Inner Forearm Block (Momtong An Makgi). The voice-over should detail the circular motion, starting from the opposite side of the body and ending at the solar plexus height. Emphasize the rotation of the forearm for blocking power.`,
+        'High Block (Olgul Makgi)': `${basePrompt} ${difficultyPrompt} Demonstrate the High Block (Olgul Makgi). The voice-over should explain how it protects the head. Instructions must cover the upward sweeping motion, crossing the arms, and the final position (one fist-width above the forehead at a 45-degree angle).`,
+        'Knife Hand Block (Sonnal Makgi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Knife Hand Block (Sonnal Makgi). The voice-over needs to explain the "knife hand" shape and the dual motion of the blocking hand and the retracting (guarding) hand. Slow motion should focus on the hand shape and the block's execution.`,
 
         // Kicks
-        'Front Snap Kick (Ap Chagi)': `${basePrompt} Demonstrate the Front Snap Kick (Ap Chagi). The voice-over must break down the four stages: chambering the knee, extending the leg (the "snap"), striking with the ball of the foot, and re-chambering before returning to stance.`,
-        'Roundhouse Kick (Dollyo Chagi)': `${basePrompt} Demonstrate the Roundhouse Kick (Dollyo Chagi). The voice-over must explain the importance of pivoting on the supporting foot and rotating the hips to generate power. Slow-motion should highlight the pivot and hip rotation.`,
-        'Side Kick (Yeop Chagi)': `${basePrompt} Demonstrate the Side Kick (Yeop Chagi). The voice-over should explain the chambering (bringing the knee to the chest and pivoting) and the powerful thrusting motion, striking with the blade of the foot or the heel.`,
-        'Back Kick (Dwi Chagi)': `${basePrompt} Demonstrate the Back Kick (Dwi Chagi). The voice-over must instruct the practitioner to look over their shoulder at the target before executing the kick. It should describe the straight-back trajectory and striking with the heel.`,
-        'Crescent Kick (Bandal Chagi)': `${basePrompt} Demonstrate the Crescent Kick (Bandal Chagi), both outward and inward versions. The voice-over should explain the circular "slapping" motion of the kick and its use for blocking or striking.`,
+        'Front Snap Kick (Ap Chagi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Front Snap Kick (Ap Chagi). The voice-over must break down the four stages: chambering the knee, extending the leg (the "snap"), striking with the ball of the foot, and re-chambering before returning to stance.`,
+        'Roundhouse Kick (Dollyo Chagi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Roundhouse Kick (Dollyo Chagi). The voice-over must explain the importance of pivoting on the supporting foot and rotating the hips to generate power. Slow-motion should highlight the pivot and hip rotation.`,
+        'Side Kick (Yeop Chagi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Side Kick (Yeop Chagi). The voice-over should explain the chambering (bringing the knee to the chest and pivoting) and the powerful thrusting motion, striking with the blade of the foot or the heel.`,
+        'Back Kick (Dwi Chagi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Back Kick (Dwi Chagi). The voice-over must instruct the practitioner to look over their shoulder at the target before executing the kick. It should describe the straight-back trajectory and striking with the heel.`,
+        'Crescent Kick (Bandal Chagi)': `${basePrompt} ${difficultyPrompt} Demonstrate the Crescent Kick (Bandal Chagi), both outward and inward versions. The voice-over should explain the circular "slapping" motion of the kick and its use for blocking or striking.`,
 
         // Board Breaking
-        'Downward Hammer Fist Break': `${basePrompt} Demonstrate a Downward Hammer Fist Break on a standard pine board held by a partner. The voice-over must explain the principles of power generation: using body weight, speed, and focus. Instructions should cover proper fist formation (hammer fist) and aiming *through* the target.`,
-        'Front Kick Break': `${basePrompt} Demonstrate a Front Kick Break on a board. The voice-over should reiterate the key points of the Front Kick but emphasize generating maximum power and speed for the break, striking with the ball of the foot.`,
-        'Side Kick Break': `${basePrompt} Demonstrate a Side Kick Break on a board. The voice-over must focus on the powerful thrust from the hip and striking with the heel or blade of the foot. It should also cover proper body alignment to prevent injury.`,
+        'Downward Hammer Fist Break': `${basePrompt} ${difficultyPrompt} Demonstrate a Downward Hammer Fist Break on a standard pine board held by a partner. The voice-over must explain the principles of power generation: using body weight, speed, and focus. Instructions should cover proper fist formation (hammer fist) and aiming *through* the target.`,
+        'Front Kick Break': `${basePrompt} ${difficultyPrompt} Demonstrate a Front Kick Break on a board. The voice-over should reiterate the key points of the Front Kick but emphasize generating maximum power and speed for the break, striking with the ball of the foot.`,
+        'Side Kick Break': `${basePrompt} ${difficultyPrompt} Demonstrate a Side Kick Break on a board. The voice-over must focus on the powerful thrust from the hip and striking with the heel or blade of the foot. It should also cover proper body alignment to prevent injury.`,
         
         // Forms
-        'Taegeuk Il Jang (Form 1)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Il Jang (Form 1). The camera should follow the practitioner from multiple angles (front, side, and elevated wide-angle) to capture all movements and transitions. A clear, instructional voice-over should announce the name of each major technique (e.g., 'Low Block in Walking Stance', 'Middle Punch in Front Stance') as it is performed. The video should be at a deliberate, steady pace.`,
-        'Taegeuk Ee Jang (Form 2)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Ee Jang (Form 2). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
-        'Taegeuk Sam Jang (Form 3)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sam Jang (Form 3). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
-        'Taegeuk Sa Jang (Form 4)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sa Jang (Form 4). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
-        'Taegeuk Oh Jang (Form 5)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Oh Jang (Form 5). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
-        'Taegeuk Yuk Jang (Form 6)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Yuk Jang (Form 6). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
-        'Taegeuk Chil Jang (Form 7)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Chil Jang (Form 7). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
-        'Taegeuk Pal Jang (Form 8)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Pal Jang (Form 8). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
-        'Koryo Poomsae': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Koryo Poomsae (Black Belt Form). The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed with power and dignity. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Il Jang (Form 1)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Il Jang (Form 1). ${difficultyPrompt} The camera should follow the practitioner from multiple angles (front, side, and elevated wide-angle) to capture all movements and transitions. A clear, instructional voice-over should announce the name of each major technique (e.g., 'Low Block in Walking Stance', 'Middle Punch in Front Stance') as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Ee Jang (Form 2)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Ee Jang (Form 2). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Sam Jang (Form 3)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sam Jang (Form 3). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Sa Jang (Form 4)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Sa Jang (Form 4). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Oh Jang (Form 5)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Oh Jang (Form 5). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Yuk Jang (Form 6)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Yuk Jang (Form 6). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Chil Jang (Form 7)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Chil Jang (Form 7). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Taegeuk Pal Jang (Form 8)': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Taegeuk Pal Jang (Form 8). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed. The video should be at a deliberate, steady pace.`,
+        'Koryo Poomsae': `Generate a high-definition, 1080p, 30fps video of a Taekwondo master performing the complete Koryo Poomsae (Black Belt Form). ${difficultyPrompt} The camera should follow the practitioner from multiple angles. A clear, instructional voice-over should announce the name of each major technique as it is performed with power and dignity. The video should be at a deliberate, steady pace.`,
         
         // Virtual Dojo
         'Virtual Instructor Intro': `A high-definition, 1080p, 30fps video. A female Taekwondo master, "Master Jin," with a confident and welcoming expression, is in a futuristic, minimalist dojo with neon blue accents. She performs a respectful Taekwondo bow towards the camera. Master Jin should speak with a clear, welcoming voice, saying: 'Welcome to the Virtual Dojo. I am Master Jin, your guide on this journey. Let's begin.' The video must include synchronized lip movements and high-quality audio.`,
@@ -387,7 +555,7 @@ const getVideoPromptForTechnique = (techniqueName: string): string => {
         'Sparring Strategy Session': `A high-definition, 1080p, 30fps video. Two practitioners in a futuristic dojo demonstrate controlled sparring drills. Two scenarios are shown: 1) Evading a roundhouse kick and countering with a back kick. 2) Blocking a punch and countering with a side kick. The video must use slow-motion and graphical overlays (e.g., arrows) to highlight footwork and timing. A strategic voice-over explains the principles of distance and turning defense into offense. The audio must be clear.`
     };
 
-    return techniquePrompts[techniqueName] || `${basePrompt} Demonstrate the ${techniqueName}. The voice-over should provide a step-by-step guide to performing the technique correctly.`;
+    return techniquePrompts[techniqueName] || `${basePrompt} ${difficultyPrompt} Demonstrate the ${techniqueName}. The voice-over should provide a step-by-step guide to performing the technique correctly.`;
 };
 
 type VideoError = { message: string; type: 'quota' | 'generic' };
@@ -404,6 +572,23 @@ const parseCriteria = (criteriaString: string): string[] => {
         .map(item => item.trim())
         .filter(Boolean); // Filter out empty strings
 };
+
+const DifficultySelector = ({ currentDifficulty, onSelectDifficulty }) => (
+    <div className="difficulty-selector">
+        <label>Select Your Level:</label>
+        <div className="difficulty-buttons-group">
+            {['Beginner', 'Intermediate', 'Advanced'].map(level => (
+                <button
+                    key={level}
+                    className={`difficulty-button ${currentDifficulty === level ? 'active' : ''}`}
+                    onClick={() => onSelectDifficulty(level)}
+                >
+                    {level}
+                </button>
+            ))}
+        </div>
+    </div>
+);
 
 
 const App = () => {
@@ -426,6 +611,7 @@ const App = () => {
     // UI State
     const [activeTab, setActiveTab] = useState('journey');
     const [activeVideo, setActiveVideo] = useState<string | null>(null);
+    const [difficulty, setDifficulty] = useState('Beginner'); // New state for difficulty
 
     // Progress Tracker State
     const [progressData, setProgressData] = useState(() => {
@@ -640,7 +826,7 @@ const App = () => {
         setVideoStates(prev => ({ ...prev, [techniqueName]: { isLoading: true } }));
 
         try {
-            const videoPrompt = getVideoPromptForTechnique(techniqueName);
+            const videoPrompt = getVideoPromptForTechnique(techniqueName, difficulty);
             
             let operation = await ai.models.generateVideos({
                 model: 'veo-2.0-generate-001',
@@ -820,6 +1006,29 @@ const App = () => {
                                         </div>
                                     ))}
                                 </div>
+
+                                <h2 className="section-title" style={{ marginTop: '60px' }}>The Path of the Master</h2>
+                                <p className="section-subtitle">Kukkiwon requirements for advancing through the Black Belt (Dan) ranks.</p>
+                                <div className="dan-grid">
+                                    {danProgression.map((rank, index) => (
+                                        <div key={index} className="dan-card">
+                                            <h3>{rank.dan}</h3>
+                                            <h4>{rank.title}</h4>
+                                            <div className="dan-info">
+                                                <span><strong>Min. Age:</strong> {rank.age}</span>
+                                                <span><strong>Min. Duration:</strong> {rank.duration}</span>
+                                            </div>
+                                            <div className="dan-requirements">
+                                                <h5>Key Requirements</h5>
+                                                <ul>
+                                                    {rank.requirements.map((req, i) => (
+                                                        <li key={i}>{req}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </section>
                         )}
 
@@ -827,6 +1036,7 @@ const App = () => {
                             <section className="section">
                                 <h2 className="section-title">Core Techniques</h2>
                                 <p className="section-subtitle">Explore fundamental movements, from stances and blocks to powerful kicks and forms.</p>
+                                <DifficultySelector currentDifficulty={difficulty} onSelectDifficulty={setDifficulty} />
                                 <div>
                                     {techniquesData.map(item => (
                                         <div key={item.id} className={`accordion-item ${openAccordion === item.id ? 'open' : ''}`}>
@@ -839,15 +1049,22 @@ const App = () => {
                                             </div>
                                             <div className="accordion-content">
                                                 <div className="content-grid">
-                                                    {item.details.map((card, cardIndex) => (
+                                                    {item.details.filter(card => {
+                                                        if ('techniques' in card) {
+                                                            return card.techniques.some(tech => tech.level === difficulty);
+                                                        }
+                                                        if ('level' in card) {
+                                                            return (card as any).level === difficulty;
+                                                        }
+                                                        return true;
+                                                    }).map((card, cardIndex) => (
                                                         <div key={cardIndex} className="content-card">
-                                                            {card.image && <img src={card.image} alt={card.title} className="card-image"/>}
                                                             <div className="card-body">
                                                                 <h4>{card.title}</h4>
-                                                                {card.techniques ? (
+                                                                {'techniques' in card ? (
                                                                     <ul className="technique-list">
-                                                                        {card.techniques.map((tech, techIndex) => {
-                                                                            const contextualPrompt = `How do I perform a ${tech.name}? Provide step-by-step instructions and common mistakes to avoid.`;
+                                                                        {card.techniques.filter(tech => tech.level === difficulty).map((tech, techIndex) => {
+                                                                            const contextualPrompt = `How do I perform a ${tech.name}? Provide step-by-step instructions and common mistakes to avoid for a ${difficulty} level practitioner.`;
                                                                             const isVideoOpen = activeVideo === tech.name;
                                                                             
                                                                             return (
@@ -861,7 +1078,8 @@ const App = () => {
                                                                                             {tech.belt !== 'white' && <span className={`tag ${tech.belt.toLowerCase()}`}>{tech.belt}</span>}
                                                                                         </button>
                                                                                         <div className="technique-buttons-group">
-                                                                                            {tech.youtubeId && (
+                                                                                            {/* FIX: Use 'in' operator to check for optional youtubeId property to satisfy TypeScript */}
+                                                                                            {'youtubeId' in tech && tech.youtubeId && (
                                                                                                 <button className="youtube-button" onClick={() => setActiveVideo(isVideoOpen ? null : tech.name)} title="Watch YouTube Tutorial">
                                                                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm6.44,11.33-6,3.33a.62.62,0,0,1-.94-.53V8.89a.62.62,0,0,1,.94-.53l6,3.33A.62.62,0,0,1,18.44,12.23Z"/></svg>
                                                                                                 </button>
@@ -871,7 +1089,8 @@ const App = () => {
                                                                                             </button>
                                                                                         </div>
                                                                                     </li>
-                                                                                    {isVideoOpen && tech.youtubeId && (
+                                                                                    {/* FIX: Use 'in' operator to check for optional youtubeId property to satisfy TypeScript. This also fixes the use of tech.youtubeId inside this block. */}
+                                                                                    {isVideoOpen && 'youtubeId' in tech && tech.youtubeId && (
                                                                                          <li className="youtube-embed-wrapper">
                                                                                             <div className="youtube-video-container">
                                                                                                 <iframe
@@ -890,14 +1109,16 @@ const App = () => {
                                                                     </ul>
                                                                 ) : (
                                                                     <div className="poomsae-details">
-                                                                        <p className="poomsae-belt">
-                                                                            <strong>Belt:</strong> <span className={`tag ${card.belt.toLowerCase()}`}>{card.belt}</span>
-                                                                        </p>
-                                                                        <p><strong>Purpose:</strong> {card.description}</p>
-                                                                        <p><strong>Key Movements:</strong> {card.keyMovements}</p>
-                                                                        <p><strong>Philosophy:</strong> {card.philosophy}</p>
+                                                                        {'belt' in card && (
+                                                                            <p className="poomsae-belt">
+                                                                                <strong>Belt:</strong> <span className={`tag ${(card as any).belt.toLowerCase()}`}>{ (card as any).belt}</span>
+                                                                            </p>
+                                                                        )}
+                                                                        <p><strong>Purpose:</strong> {'description' in card && (card as any).description}</p>
+                                                                        <p><strong>Key Movements:</strong> {'keyMovements' in card && (card as any).keyMovements}</p>
+                                                                        <p><strong>Philosophy:</strong> {'philosophy' in card && (card as any).philosophy}</p>
                                                                         <div className="technique-actions">
-                                                                            <button className="context-button" onClick={() => handleContextualSubmit(`Explain ${card.title} in detail. Describe its purpose, key movements, and the philosophical concepts it represents.`)}>
+                                                                            <button className="context-button" onClick={() => handleContextualSubmit(`Explain ${card.title} in detail for a ${difficulty} level practitioner. Describe its purpose, key movements, and the philosophical concepts it represents.`)}>
                                                                                 Ask AI about this Form
                                                                             </button>
                                                                             <button className="video-button" onClick={() => openVideoModal(card.title)} disabled={videoStates[card.title]?.isLoading}>
@@ -921,18 +1142,20 @@ const App = () => {
                             <section className="section">
                                 <h2 className="section-title">Sparring Drills</h2>
                                 <p className="section-subtitle">Hone your combat skills with structured drills for timing, defense, and strategy.</p>
+                                <DifficultySelector currentDifficulty={difficulty} onSelectDifficulty={setDifficulty} />
                                 <div className="program-grid">
-                                    {sparringDrillsData.map((drill, index) => {
-                                        const prompt = `Provide a detailed breakdown of the Taekwondo drill: ${drill.title}. Explain the purpose, step-by-step execution for both attacker and defender (if applicable), common variations, and key points to focus on for improvement.`;
+                                    {sparringDrillsData.filter(drill => drill.level === difficulty || (difficulty === 'Intermediate' && drill.level === 'Beginner') || (difficulty === 'Advanced' && (drill.level === 'Beginner' || drill.level === 'Intermediate'))).map((drill, index) => {
+                                        const details = drill.detailsByLevel[difficulty];
+                                        const prompt = `Provide a detailed breakdown of the Taekwondo drill: ${drill.title}, tailored for a ${difficulty} level practitioner. Explain the purpose, step-by-step execution for both attacker and defender, and focus on these key areas: ${details.keyFocusAreas.join(', ')}.`;
                                         return (
                                             <div key={index} className="program-card" style={{ borderLeftColor: drill.style }}>
                                                 <h3>{drill.title}</h3>
-                                                <p>{drill.description}</p>
+                                                <p>{details.description}</p>
                                                 
                                                 <div className="program-details">
-                                                    <h5>Key Focus Areas:</h5>
+                                                    <h5>Key Focus Areas for {difficulty}s:</h5>
                                                     <ul>
-                                                        {drill.keyFocusAreas.map((item, i) => <li key={i}>{item}</li>)}
+                                                        {details.keyFocusAreas.map((item, i) => <li key={i}>{item}</li>)}
                                                     </ul>
                                                     
                                                     <h5>Required Equipment:</h5>
@@ -960,8 +1183,9 @@ const App = () => {
                             <section className="section">
                                 <h2 className="section-title">Structured Training Programs</h2>
                                 <p className="section-subtitle">Follow a guided path to enhance your skills, from foundational techniques to advanced mastery.</p>
+                                <DifficultySelector currentDifficulty={difficulty} onSelectDifficulty={setDifficulty} />
                                 <div className="program-grid">
-                                    {trainingProgramsData.map((program) => {
+                                    {trainingProgramsData.filter(p => p.level === difficulty).map((program) => {
                                         const prompt = `Create a detailed 4-week training plan for a Taekwondo ${program.level}. The program title is "${program.title}". The goal is: "${program.description}". Key focus areas are: ${program.focus.join(', ')}. Use this sample schedule as a guide: ${program.schedule.map(s => `${s.day}: ${s.activity}`).join('; ')}. Break down the plan day-by-day with specific drills, rep counts, and goals for each week.`;
                                         return (
                                             <div key={program.level} className="program-card" style={{ borderLeftColor: program.style }}>
@@ -1254,7 +1478,10 @@ const App = () => {
                 </div>
             </main>
             <footer className="app-footer">
-                <p>&copy; 2024 Taekwondo AI Assistant. All rights reserved.</p>
+                <div>
+                    <p>&copy; 2024 Taekwondo AI Assistant. All rights reserved.</p>
+                    <p className="author-credit">Created by Raja Mehraj Aslam</p>
+                </div>
                 <div className="footer-buttons">
                      <button className="settings-button" onClick={() => setIsCustomizerOpen(true)} aria-label="Customize theme">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.82 10.93a1 1 0 0 0-1.64-.78l-.13.22a8.03 8.03 0 0 0-1.4-1.4l.22-.13a1 1 0 0 0-.78-1.64L14.2 4.18a1 1 0 0 0-1.2 0l-.5.86a8.03 8.03 0 0 0-1.99 0l-.5-.86a1 1 0 0 0-1.2 0l-1.88 3.02a1 1 0 0 0-.79 1.64l.22.13a8.03 8.03 0 0 0-1.4 1.4l-.13-.22a1 1 0 0 0-1.64.78l-3.02 1.88a1 1 0 0 0 0 1.2l3.02 1.88a1 1 0 0 0 1.64-.78l.13-.22a8.03 8.03 0 0 0 1.4 1.4l-.22.13a1 1 0 0 0 .78 1.64l1.88 3.02a1 1 0 0 0 1.2 0l.5-.86a8.03 8.03 0 0 0 1.99 0l.5.86a1 1 0 0 0 1.2 0l1.88-3.02a1 1 0 0 0 .78-1.64l-.22-.13a8.03 8.03 0 0 0 1.4-1.4l.13.22a1 1 0 0 0 1.64-.78l-3.02-1.88Zm-7.82 5.57a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"></path></svg>
