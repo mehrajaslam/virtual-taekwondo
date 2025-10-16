@@ -1,5 +1,7 @@
 {
   "name": "Taekwondo training",
   "description": "A user can get all information regarding his need.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "camera"
+  ]
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 
 const beltProgression = [
     {
@@ -655,6 +655,18 @@ const App = () => {
     // Video Player Ref
     const videoRef = useRef<HTMLVideoElement>(null);
 
+    // AI Sparring State
+    const [isSparringModeActive, setIsSparringModeActive] = useState(false);
+    const [isSparringSessionRunning, setIsSparringSessionRunning] = useState(false);
+    const [isAnalyzingFrame, setIsAnalyzingFrame] = useState(false);
+    const [aiOpponentState, setAiOpponentState] = useState<{ technique: string, reaction: string, feedback: string } | null>(null);
+    const [stream, setStream] = useState<MediaStream | null>(null);
+
+    // AI Sparring Refs
+    const userVideoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const analysisIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
     useEffect(() => {
         if (bgUrl) {
             document.body.style.backgroundImage = `url('${bgUrl}')`;
@@ -826,14 +838,14 @@ const App = () => {
             });
             setResponse(result.text);
         } catch (e) {
-            // FIX: Add robust error handling for unknown error types to fix TypeScript error.
             console.error(e);
             let errorPayload: VideoError = {
                 message: 'An unknown error occurred while generating content.',
                 type: 'generic'
             };
 
-            const errorMessage = e instanceof Error ? e.message : String(e);
+            // FIX: Cast the unknown error to 'any' to handle strict type checking when converting to a string.
+            const errorMessage = e instanceof Error ? e.message : String(e as any);
 
             if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
                 errorPayload = {
@@ -869,7 +881,7 @@ const App = () => {
         try {
             const videoPrompt = getVideoPromptForTechnique(techniqueName, difficulty);
             
-            // FIX: Use the correct model name for video generation as per guidelines.
+            // FIX: Corrected the model name to a valid one from the guidelines.
             let operation = await ai.models.generateVideos({
                 model: 'veo-2.0-generate-001',
                 prompt: videoPrompt,
@@ -903,7 +915,8 @@ const App = () => {
                 type: 'generic' 
             };
             
-            const errorMessage = e instanceof Error ? e.message : String(e);
+            // FIX: Cast the unknown error to 'any' for consistent and safe string conversion.
+            const errorMessage = e instanceof Error ? e.message : String(e as any);
 
             if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
                 errorPayload = {
@@ -957,7 +970,8 @@ const App = () => {
         generateAnswer(prompt);
     };
 
-    const handleContextualSubmit = (contextualPrompt) => {
+    // FIX: Added explicit type annotation for the parameter to prevent potential type errors.
+    const handleContextualSubmit = (contextualPrompt: string) => {
         setPrompt(contextualPrompt);
         generateAnswer(contextualPrompt);
     };
@@ -984,6 +998,116 @@ const App = () => {
                 console.error('Error sharing:', error);
             }
         }
+    };
+
+    // AI Sparring Functions
+    const blobToBase64 = (blob: Blob): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64data = reader.result as string;
+                resolve(base64data.split(',')[1]); // Remove the data URI prefix
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    };
+
+    const getAIReaction = async (base64Image: string) => {
+        try {
+            const prompt = `You are a Taekwondo master AI. Analyze the user's technique in the provided image. Identify the single most prominent Taekwondo technique. Based on that technique and the selected difficulty of '${difficulty}', determine the most appropriate reaction. For 'Beginner', focus on simple, direct blocks. For 'Intermediate', use more advanced blocks and simple counters like a middle punch. For 'Advanced', use evasive footwork and effective counter-attacks like a side kick or spinning kick. Provide brief, positive feedback on the user's form. Respond ONLY with a valid JSON object matching the provided schema.`;
+
+            const responseSchema = {
+                type: Type.OBJECT,
+                properties: {
+                    technique: { type: Type.STRING, description: 'Name of the Taekwondo technique performed by the user. If no technique is clear, respond with "Ready Stance".' },
+                    reaction: { type: Type.STRING, description: 'The best defensive or offensive reaction for the AI opponent to take.' },
+                    feedback: { type: Type.STRING, description: 'Brief, constructive feedback on the user\'s form for the identified technique.' }
+                },
+                required: ['technique', 'reaction', 'feedback'],
+            };
+
+            const imagePart = { inlineData: { mimeType: 'image/jpeg', data: base64Image } };
+            const textPart = { text: prompt };
+
+            const result = await ai.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: { parts: [imagePart, textPart] },
+                config: {
+                    responseMimeType: "application/json",
+                    responseSchema: responseSchema,
+                },
+            });
+            
+            const jsonString = result.text.trim();
+            const parsedJson = JSON.parse(jsonString);
+            setAiOpponentState(parsedJson);
+
+        } catch (e) {
+            console.error("Error getting AI reaction:", e);
+            setAiOpponentState({ technique: 'Error', reaction: 'Could not analyze.', feedback: 'There was an issue communicating with the AI. Please try again.' });
+        } finally {
+            setIsAnalyzingFrame(false);
+        }
+    };
+
+    const analyzeFrame = async () => {
+        if (isAnalyzingFrame || !userVideoRef.current || !canvasRef.current) return;
+
+        setIsAnalyzingFrame(true);
+        setAiOpponentState(null); 
+
+        const video = userVideoRef.current;
+        const canvas = canvasRef.current;
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        if (context) {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(async (blob) => {
+                if (blob) {
+                    const base64Data = await blobToBase64(blob);
+                    await getAIReaction(base64Data);
+                } else {
+                    setIsAnalyzingFrame(false);
+                }
+            }, 'image/jpeg', 0.8);
+        } else {
+            setIsAnalyzingFrame(false);
+        }
+    };
+
+    const startSparringSession = async () => {
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            setStream(mediaStream);
+            if (userVideoRef.current) {
+                userVideoRef.current.srcObject = mediaStream;
+            }
+            setIsSparringSessionRunning(true);
+            analysisIntervalRef.current = setInterval(analyzeFrame, 3000); // Analyze every 3 seconds
+        } catch (err) {
+            console.error("Error accessing camera:", err);
+            alert("Could not access the camera. Please ensure you have given permission in your browser settings.");
+        }
+    };
+
+    const stopSparringSession = () => {
+        if (analysisIntervalRef.current) {
+            clearInterval(analysisIntervalRef.current);
+        }
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        setIsSparringSessionRunning(false);
+        setStream(null);
+        setAiOpponentState(null);
+        setIsAnalyzingFrame(false);
+    };
+
+    const handleCloseSparring = () => {
+        stopSparringSession();
+        setIsSparringModeActive(false);
     };
 
     return (
@@ -1391,6 +1515,13 @@ const App = () => {
                                             Learn Sparring Tactics
                                         </button>
                                     </div>
+                                    <div className="dojo-card">
+                                        <h3>AI Sparring Partner</h3>
+                                        <p>Test your skills in real-time against a smart AI opponent.</p>
+                                        <button className="dojo-button" onClick={() => setIsSparringModeActive(true)}>
+                                            Enter Sparring Mode
+                                        </button>
+                                    </div>
                                 </div>
                             </section>
                         )}
@@ -1611,6 +1742,45 @@ const App = () => {
                              <button className="reset-button" onClick={handleResetCustomization}>Reset to Defaults</button>
                             <button className="cancel-button" onClick={() => setIsCustomizerOpen(false)}>Cancel</button>
                             <button className="apply-button" onClick={handleApplyCustomization}>Apply</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {isSparringModeActive && (
+                <div className="sparring-modal-overlay">
+                    <div className="sparring-modal-content">
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
+                        <button className="sparring-modal-close" onClick={handleCloseSparring}>&times;</button>
+                        <h3>AI Sparring Dojo</h3>
+                        <div className="sparring-arena">
+                            <div className="user-view">
+                                <h4>You</h4>
+                                <video ref={userVideoRef} autoPlay playsInline muted className="user-video-feed"></video>
+                            </div>
+                            <div className="opponent-view">
+                                <h4>AI Opponent ({difficulty})</h4>
+                                <div className="opponent-display">
+                                    {isAnalyzingFrame && !aiOpponentState && <div className="loading-spinner"></div>}
+                                    {!isAnalyzingFrame && !aiOpponentState && isSparringSessionRunning && <p>Perform a technique!</p>}
+                                    {!isSparringSessionRunning && <p>Press Start to begin.</p>}
+                                    {aiOpponentState && (
+                                        <div className="opponent-feedback">
+                                            <p><strong>Your Technique:</strong> {aiOpponentState.technique}</p>
+                                            <p><strong>Opponent Reacts:</strong> <span className="reaction-tag">{aiOpponentState.reaction}</span></p>
+                                            <p><strong>Feedback:</strong> {aiOpponentState.feedback}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="sparring-controls">
+                            <DifficultySelector currentDifficulty={difficulty} onSelectDifficulty={setDifficulty} />
+                            {!isSparringSessionRunning ? (
+                                <button className="sparring-button start" onClick={startSparringSession}>Start Sparring</button>
+                            ) : (
+                                <button className="sparring-button stop" onClick={stopSparringSession}>Stop Sparring</button>
+                            )}
                         </div>
                     </div>
                 </div>
