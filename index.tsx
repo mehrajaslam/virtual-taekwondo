@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI } from "@google/genai";
@@ -573,6 +574,15 @@ const parseCriteria = (criteriaString: string): string[] => {
         .filter(Boolean); // Filter out empty strings
 };
 
+const defaultBeltColors = {
+    yellow: '#ffc107',
+    green: '#28a745',
+    blue: '#007bff',
+    red: '#dc3545',
+    brown: '#a52a2a',
+};
+
+
 const DifficultySelector = ({ currentDifficulty, onSelectDifficulty }) => (
     <div className="difficulty-selector">
         <label>Select Your Level:</label>
@@ -607,6 +617,16 @@ const App = () => {
     const defaultBgUrl = 'https://images.unsplash.com/photo-1620152288427-4860b7692138?q=80&w=2574&auto=format&fit=crop';
     const [bgUrl, setBgUrl] = useState(localStorage.getItem('tkd-bg-url') || defaultBgUrl);
     const [tempBgUrl, setTempBgUrl] = useState(bgUrl);
+    const [beltColors, setBeltColors] = useState(() => {
+        try {
+            const savedColors = localStorage.getItem('tkd-belt-colors');
+            return savedColors ? JSON.parse(savedColors) : defaultBeltColors;
+        } catch (error) {
+            console.error("Could not load belt colors", error);
+            return defaultBeltColors;
+        }
+    });
+    const [tempBeltColors, setTempBeltColors] = useState(beltColors);
     
     // UI State
     const [activeTab, setActiveTab] = useState('journey');
@@ -644,6 +664,20 @@ const App = () => {
             localStorage.removeItem('tkd-bg-url');
         }
     }, [bgUrl]);
+
+    // Effect to apply custom belt colors and save them
+    useEffect(() => {
+        const root = document.documentElement;
+        for (const [name, color] of Object.entries(beltColors)) {
+            root.style.setProperty(`--${name}`, color);
+        }
+        try {
+            localStorage.setItem('tkd-belt-colors', JSON.stringify(beltColors));
+        } catch (error) {
+            console.error("Could not save belt colors", error);
+        }
+    }, [beltColors]);
+
 
     // Save progress to localStorage whenever it changes
     useEffect(() => {
@@ -725,8 +759,15 @@ const App = () => {
 
     const handleApplyCustomization = () => {
         setBgUrl(tempBgUrl);
+        setBeltColors(tempBeltColors);
         setIsCustomizerOpen(false);
     };
+
+    const handleResetCustomization = () => {
+        setTempBgUrl(defaultBgUrl);
+        setTempBeltColors(defaultBeltColors);
+    };
+
 
     const handleAccordionToggle = (id: string) => {
         setOpenAccordion(openAccordion === id ? null : id);
@@ -767,7 +808,7 @@ const App = () => {
         return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     };
 
-    const generateAnswer = async (currentPrompt) => {
+    const generateAnswer = async (currentPrompt: string) => {
         if (!currentPrompt) {
             setError({ message: 'Please enter a prompt.', type: 'generic' });
             return;
@@ -785,35 +826,35 @@ const App = () => {
             });
             setResponse(result.text);
         } catch (e) {
+            // FIX: Add robust error handling for unknown error types to fix TypeScript error.
             console.error(e);
-            let errorPayload: VideoError = { 
-                message: 'An unknown error occurred while generating content.', 
-                type: 'generic' 
+            let errorPayload: VideoError = {
+                message: 'An unknown error occurred while generating content.',
+                type: 'generic'
             };
 
-            if (e instanceof Error) {
-                const errorMessage = e.message.toLowerCase();
-                if (errorMessage.includes('quota') || errorMessage.includes('resource_exhausted')) {
-                    errorPayload = {
-                        message: "You've reached the API usage limit for generating answers. To continue, please check your Google AI Studio account for more details or set up billing.",
-                        type: 'quota'
-                    };
-                } else {
-                    try {
-                        const jsonMatch = e.message.match(/{.*}/);
-                        if (jsonMatch) {
-                            const errorJson = JSON.parse(jsonMatch[0]);
-                            if (errorJson.error?.message) {
-                                errorPayload.message = `Failed to generate content: ${errorJson.error.message}`;
-                            } else {
-                                errorPayload.message = `Failed to generate content: ${e.message}`;
-                            }
+            const errorMessage = e instanceof Error ? e.message : String(e);
+
+            if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
+                errorPayload = {
+                    message: "You've reached the API usage limit for generating answers. To continue, please check your Google AI Studio account for more details or set up billing.",
+                    type: 'quota'
+                };
+            } else {
+                try {
+                    const jsonMatch = errorMessage.match(/{.*}/);
+                    if (jsonMatch) {
+                        const errorJson = JSON.parse(jsonMatch[0]);
+                        if (errorJson?.error?.message) {
+                            errorPayload.message = `Failed to generate content: ${String(errorJson.error.message)}`;
                         } else {
-                            errorPayload.message = `Failed to generate content: ${e.message}`;
+                            errorPayload.message = `Failed to generate content: ${errorMessage}`;
                         }
-                    } catch (parseError) {
-                        errorPayload.message = `Failed to generate content: ${e.message}`;
+                    } else {
+                        errorPayload.message = `Failed to generate content: ${errorMessage}`;
                     }
+                } catch (parseError) {
+                    errorPayload.message = `Failed to generate content: ${errorMessage}`;
                 }
             }
             setError(errorPayload);
@@ -828,6 +869,7 @@ const App = () => {
         try {
             const videoPrompt = getVideoPromptForTechnique(techniqueName, difficulty);
             
+            // FIX: Use the correct model name for video generation as per guidelines.
             let operation = await ai.models.generateVideos({
                 model: 'veo-2.0-generate-001',
                 prompt: videoPrompt,
@@ -860,30 +902,29 @@ const App = () => {
                 message: 'An unknown error occurred while generating the video.', 
                 type: 'generic' 
             };
+            
+            const errorMessage = e instanceof Error ? e.message : String(e);
 
-            if (e instanceof Error) {
-                const errorMessage = e.message.toLowerCase();
-                if (errorMessage.includes('quota') || errorMessage.includes('resource_exhausted')) {
-                    errorPayload = {
-                        message: "You've reached the API usage limit for video generation. To continue, please check your Google AI Studio account for more details or set up billing.",
-                        type: 'quota'
-                    };
-                } else {
-                    try {
-                        const jsonMatch = e.message.match(/{.*}/);
-                        if (jsonMatch) {
-                            const errorJson = JSON.parse(jsonMatch[0]);
-                            if (errorJson.error?.message) {
-                                errorPayload.message = errorJson.error.message;
-                            } else {
-                                errorPayload.message = e.message;
-                            }
+            if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
+                errorPayload = {
+                    message: "You've reached the API usage limit for video generation. To continue, please check your Google AI Studio account for more details or set up billing.",
+                    type: 'quota'
+                };
+            } else {
+                try {
+                    const jsonMatch = errorMessage.match(/{.*}/);
+                    if (jsonMatch) {
+                        const errorJson = JSON.parse(jsonMatch[0]);
+                        if (errorJson?.error?.message) {
+                            errorPayload.message = `Failed to generate video: ${String(errorJson.error.message)}`;
                         } else {
-                            errorPayload.message = e.message;
+                            errorPayload.message = `Failed to generate video: ${errorMessage}`;
                         }
-                    } catch (parseError) {
-                        errorPayload.message = e.message;
+                    } else {
+                        errorPayload.message = `Failed to generate video: ${errorMessage}`;
                     }
+                } catch (parseError) {
+                    errorPayload.message = `Failed to generate video: ${errorMessage}`;
                 }
             }
             setVideoStates(prev => ({ ...prev, [techniqueName]: { isLoading: false, error: errorPayload } }));
@@ -1078,7 +1119,6 @@ const App = () => {
                                                                                             {tech.belt !== 'white' && <span className={`tag ${tech.belt.toLowerCase()}`}>{tech.belt}</span>}
                                                                                         </button>
                                                                                         <div className="technique-buttons-group">
-                                                                                            {/* FIX: Use 'in' operator to check for optional youtubeId property to satisfy TypeScript */}
                                                                                             {'youtubeId' in tech && tech.youtubeId && (
                                                                                                 <button className="youtube-button" onClick={() => setActiveVideo(isVideoOpen ? null : tech.name)} title="Watch YouTube Tutorial">
                                                                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm6.44,11.33-6,3.33a.62.62,0,0,1-.94-.53V8.89a.62.62,0,0,1,.94-.53l6,3.33A.62.62,0,0,1,18.44,12.23Z"/></svg>
@@ -1089,7 +1129,6 @@ const App = () => {
                                                                                             </button>
                                                                                         </div>
                                                                                     </li>
-                                                                                    {/* FIX: Use 'in' operator to check for optional youtubeId property to satisfy TypeScript. This also fixes the use of tech.youtubeId inside this block. */}
                                                                                     {isVideoOpen && 'youtubeId' in tech && tech.youtubeId && (
                                                                                          <li className="youtube-embed-wrapper">
                                                                                             <div className="youtube-video-container">
@@ -1483,7 +1522,11 @@ const App = () => {
                     <p className="author-credit">Created by Raja Mehraj Aslam</p>
                 </div>
                 <div className="footer-buttons">
-                     <button className="settings-button" onClick={() => setIsCustomizerOpen(true)} aria-label="Customize theme">
+                     <button className="settings-button" onClick={() => {
+                        setTempBgUrl(bgUrl);
+                        setTempBeltColors(beltColors);
+                        setIsCustomizerOpen(true);
+                     }} aria-label="Customize theme">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.82 10.93a1 1 0 0 0-1.64-.78l-.13.22a8.03 8.03 0 0 0-1.4-1.4l.22-.13a1 1 0 0 0-.78-1.64L14.2 4.18a1 1 0 0 0-1.2 0l-.5.86a8.03 8.03 0 0 0-1.99 0l-.5-.86a1 1 0 0 0-1.2 0l-1.88 3.02a1 1 0 0 0-.79 1.64l.22.13a8.03 8.03 0 0 0-1.4 1.4l-.13-.22a1 1 0 0 0-1.64.78l-3.02 1.88a1 1 0 0 0 0 1.2l3.02 1.88a1 1 0 0 0 1.64-.78l.13-.22a8.03 8.03 0 0 0 1.4 1.4l-.22.13a1 1 0 0 0 .78 1.64l1.88 3.02a1 1 0 0 0 1.2 0l.5-.86a8.03 8.03 0 0 0 1.99 0l.5.86a1 1 0 0 0 1.2 0l1.88-3.02a1 1 0 0 0 .78-1.64l-.22-.13a8.03 8.03 0 0 0 1.4-1.4l.13.22a1 1 0 0 0 1.64-.78l-3.02-1.88Zm-7.82 5.57a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"></path></svg>
                     </button>
                 </div>
@@ -1548,7 +1591,24 @@ const App = () => {
                                 placeholder="https://..."
                             />
                         </div>
+
+                        <h4>Belt Colors</h4>
+                        <div className="color-picker-grid">
+                            {Object.entries(tempBeltColors).map(([name, color]) => (
+                                <div key={name} className="form-group color-picker-group">
+                                    <label htmlFor={`${name}-color-input`}>{name.charAt(0).toUpperCase() + name.slice(1)}</label>
+                                    <input
+                                        id={`${name}-color-input`}
+                                        type="color"
+                                        value={color}
+                                        onChange={(e) => setTempBeltColors(prev => ({ ...prev, [name]: e.target.value }))}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
                         <div className="customizer-actions">
+                             <button className="reset-button" onClick={handleResetCustomization}>Reset to Defaults</button>
                             <button className="cancel-button" onClick={() => setIsCustomizerOpen(false)}>Cancel</button>
                             <button className="apply-button" onClick={handleApplyCustomization}>Apply</button>
                         </div>
