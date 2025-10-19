@@ -887,7 +887,7 @@ const App = () => {
                 throw new Error("Video generation succeeded but no download link was provided.");
             }
 
-            const videoResponse = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
+const videoResponse = await fetch(`${downloadLink}&key=${import.meta.env.VITE_API_KEY}`);
             if (!videoResponse.ok) {
                 throw new Error(`Failed to download video: ${videoResponse.statusText}`);
             }
