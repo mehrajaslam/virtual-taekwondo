@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI, Type } from "@google/genai";
@@ -845,6 +846,7 @@ const App = () => {
             };
 
             // FIX: The caught error `e` is of type `unknown` and cannot be passed directly to `String()`. Cast to `any` to handle strict type checking.
+            // Fix: Cast error `e` of type `unknown` to `any` before passing to `String()` to fix TypeScript error.
             const errorMessage = e instanceof Error ? e.message : String(e as any);
 
             if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
@@ -915,6 +917,7 @@ const App = () => {
             };
             
             // FIX: The caught error `e` is of type `unknown` and cannot be passed directly to `String()`. Cast to `any` for consistent and safe string conversion.
+            // Fix: Cast error `e` of type `unknown` to `any` before passing to `String()` to fix TypeScript error.
             const errorMessage = e instanceof Error ? e.message : String(e as any);
 
             if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
