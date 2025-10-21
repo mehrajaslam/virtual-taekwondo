@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI, Type } from "@google/genai";
@@ -887,7 +888,7 @@ const App = () => {
                 throw new Error("Video generation succeeded but no download link was provided.");
             }
 
-const videoResponse = await fetch(`${downloadLink}&key=${import.meta.env.VITE_API_KEY}`);
+            const videoResponse = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
             if (!videoResponse.ok) {
                 throw new Error(`Failed to download video: ${videoResponse.statusText}`);
             }
@@ -1153,4 +1154,40 @@ const videoResponse = await fetch(`${downloadLink}&key=${import.meta.env.VITE_AP
                         React.createElement("h4", null, "What is Virtual Taekwondo?"),
                         React.createElement("p", null, "Virtual Taekwondo uses AI to provide an interactive and accessible training partner. It's a supplementary tool to enhance your practice, receive instant visual feedback on techniques, and learn at your own pace, anytime, anywhere."),
                         React.createElement("h4", null, "How to Practice"),
-                        React.createElement("p", null, "Find a safe, open space. Use the video modules below to warm up and practice specific techniques. Watch the AI instructor, mimic the movements, and use the
+                        React.createElement("p", null, "Find a safe, open space. Use the video modules below to warm up and practice specific techniques. Watch the AI instructor, mimic the movements, and use the AI Assistant to ask questions about form, function, or philosophy."),
+                        React.createElement("h4", null, "Required Equipment"),
+                        React.createElement("p", null, React.createElement("strong", null, "Essential:"), " Comfortable workout clothes and enough space to move freely. ", React.createElement("br", null), React.createElement("strong", null, "Recommended:"), " A device with a large screen for clear viewing. ", React.createElement("br", null), React.createElement("strong", null, "Optional:"), " A full-length mirror or webcam to self-assess your form against the instructor's."),
+                        React.createElement("h4", null, "Rules & Etiquette"),
+                        React.createElement("p", null, "Even in a virtual space, respect and discipline are key. Begin each session with a bow. Focus on performing each movement with precision, not just speed. Maintain a positive and determined mindset throughout your training.")
+                    ),
+                    React.createElement("div", { className: "virtual-dojo-grid" }, dojoCards)
+                );
+            case 'timer':
+                //... same as before
+                return; // Temp
+        }
+    };
+    
+    return React.createElement(React.Fragment, null,
+        React.createElement("audio", { ref: audioRef, src: "https://actions.google.com/sounds/v1/alarms/beep_short.ogg", preload: "auto" }),
+        React.createElement("header", { className: "app-header" }, /* ... */),
+        React.createElement("main", null, /* ... */),
+        React.createElement("footer", { className: "app-footer" }, /* ... */),
+        activeModalTechnique && React.createElement("div", { className: "video-modal-overlay open", onClick: closeVideoModal }, /* ... */),
+        isCustomizerOpen && React.createElement("div", { className: "customizer-overlay", onClick: () => setIsCustomizerOpen(false) }, /* ... */),
+        isSparringModeActive && React.createElement("div", { className: "sparring-modal-overlay" }, /* ... */)
+    );
+};
+
+// Standard React entry point to render the App component.
+const rootElement = document.getElementById('root');
+if (rootElement) {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+        React.createElement(React.StrictMode, null,
+            React.createElement(App, null)
+        )
+    );
+} else {
+    console.error("Fatal: Could not find the 'root' element to mount the React application.");
+}

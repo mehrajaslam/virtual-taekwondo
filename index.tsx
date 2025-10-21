@@ -844,7 +844,7 @@ const App = () => {
                 type: 'generic'
             };
 
-            // FIX: Cast the unknown error to 'any' to handle strict type checking when converting to a string.
+            // FIX: The caught error `e` is of type `unknown` and cannot be passed directly to `String()`. Cast to `any` to handle strict type checking.
             const errorMessage = e instanceof Error ? e.message : String(e as any);
 
             if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
@@ -881,9 +881,8 @@ const App = () => {
         try {
             const videoPrompt = getVideoPromptForTechnique(techniqueName, difficulty);
             
-            // FIX: Corrected the model name to a valid one from the guidelines.
             let operation = await ai.models.generateVideos({
-                model: 'veo-2.0-generate-001',
+                model: 'veo-3.1-fast-generate-preview',
                 prompt: videoPrompt,
                 config: { numberOfVideos: 1 }
             });
@@ -915,7 +914,7 @@ const App = () => {
                 type: 'generic' 
             };
             
-            // FIX: Cast the unknown error to 'any' for consistent and safe string conversion.
+            // FIX: The caught error `e` is of type `unknown` and cannot be passed directly to `String()`. Cast to `any` for consistent and safe string conversion.
             const errorMessage = e instanceof Error ? e.message : String(e as any);
 
             if (errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('resource_exhausted')) {
@@ -970,7 +969,6 @@ const App = () => {
         generateAnswer(prompt);
     };
 
-    // FIX: Added explicit type annotation for the parameter to prevent potential type errors.
     const handleContextualSubmit = (contextualPrompt: string) => {
         setPrompt(contextualPrompt);
         generateAnswer(contextualPrompt);
